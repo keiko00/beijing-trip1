@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>11和14北京GO</title>
     <style>
-        /* 原有样式全部保留，此处省略（和之前一致） */
+        /* 原有样式全部保留，仅移除地图容器相关样式，新增适配样式 */
         * {
             margin: 0;
             padding: 0;
@@ -240,6 +240,7 @@
             font-weight: bold;
         }
         
+        /* 调整地图页面样式：移除地图容器，优化距离信息展示 */
         .map-page {
             padding: 10px;
         }
@@ -282,21 +283,7 @@
             border-color: #9E2A2B;
         }
         
-        .map-container {
-            width: 100%;
-            height: 300px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            overflow: hidden;
-            margin: 0 auto;
-        }
-        
-        #map {
-            width: 100%;
-            height: 100%;
-        }
-        
+        /* 移除地图容器样式 */
         .location-distance {
             background-color: white;
             border-radius: 8px;
@@ -359,9 +346,6 @@
                 width: 75px;
                 font-size: 10px;
             }
-            .map-container {
-                height: 250px;
-            }
             .transport-item {
                 gap: 2px;
             }
@@ -376,29 +360,14 @@
         }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
-    
-    <!-- 关键修改1：替换安全密钥配置为代理服务器地址 -->
-    <script type="text/javascript">
-        // 配置代理服务器地址（必须在高德API加载前设置）
-        window._AMapSecurityConfig = {
-            // 80端口版本（默认）
-            serviceHost: "http://127.0.0.1/_AMapService",
-            // 如果你改了8080端口，把上面一行换成这个：
-            // serviceHost: "http://127.0.0.1:8080/_AMapService",
-        };
-        // 移除原有的securityJsCode配置，改为通过Nginx转发
-    </script>
-    
-    <!-- 关键修改2：保留API Key，加载高德JS API -->
-    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=3bd2861bb1307c9b6f82021b723681fb"></script>
 </head>
 <body>
-    <!-- 原有HTML结构全部保留，此处省略（和之前一致） -->
     <div class="header">
         <h1>11和14北京GO</h1>
         <p>12.31-1.3 详细行程安排</p>
     </div>
     
+    <!-- 行程表页面（无修改） -->
     <div class="page active" id="schedule-page">
         <div class="schedule-content">
             <!-- 12.31 行程 -->
@@ -619,6 +588,7 @@
         </div>
     </div>
     
+    <!-- 费用统计页面（无修改） -->
     <div class="page" id="cost-page">
         <div class="cost-page">
             <div class="cost-section">
@@ -687,10 +657,11 @@
         </div>
     </div>
     
+    <!-- 行程地图页面：移除地图容器，保留日期选择和距离信息 -->
     <div class="page" id="map-page">
         <div class="map-page">
             <div class="map-controls">
-                <h3>行程地图</h3>
+                <h3>行程距离信息</h3>
                 <div class="day-selector">
                     <button class="day-btn active" data-day="31">12月31日</button>
                     <button class="day-btn" data-day="01">1月1日</button>
@@ -700,9 +671,7 @@
                 <p style="font-size:11px;color:#666;">点击日期查看对应行程位置和交通信息</p>
             </div>
             
-            <div class="map-container">
-                <div id="map"></div>
-            </div>
+            <!-- 移除地图容器 -->
             
             <div class="location-distance">
                 <h3 id="distance-title">12月31日 核心位置距离</h3>
@@ -728,7 +697,7 @@
     </div>
     
     <script>
-        // 页面切换功能
+        // 页面切换功能（无修改）
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', function() {
                 document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
@@ -736,13 +705,10 @@
                 
                 this.classList.add('active');
                 document.getElementById(this.dataset.page).classList.add('active');
-                
-                if (this.dataset.page === 'map-page' && !mapInitialized) {
-                    initMap();
-                }
             });
         });
         
+        // 距离数据（保留所有核心信息）
         const distanceData = {
             '31': [
                 {
@@ -814,6 +780,7 @@
             ]
         };
         
+        // 更新距离信息（保留所有功能）
         function updateDistanceInfo(day) {
             const dayNames = {
                 '31': '12月31日',
@@ -846,120 +813,22 @@
             });
         }
         
-        let map, markers = {}, currentDay = '31', mapInitialized = false;
-        
-        function initMap() {
-            if (mapInitialized) return;
-            
-            try {
-                const mapLoadTimeout = setTimeout(() => {
-                    throw new Error('地图加载超时');
-                }, 10000);
+        // 日期选择器功能（保留）
+        let currentDay = '31';
+        document.querySelectorAll('.day-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
                 
-                map = new AMap.Map('map', {
-                    zoom: 12,
-                    center: [116.413384, 39.908823],
-                    resizeEnable: true,
-                    scrollWheel: true,
-                    logoPosition: 'RB',
-                    mapStyle: 'amap://styles/normal',
-                    animateEnable: false
-                });
-                
-                clearTimeout(mapLoadTimeout);
-                
-                map.addControl(new AMap.Scale());
-                map.addControl(new AMap.ToolBar({
-                    position: 'RB'
-                }));
-                
-                const locations = {
-                    '31': [{ name: '桔子水晶酒店', lnglat: [116.413384, 39.908823] }, { name: '首都机场T2', lnglat: [116.600939, 40.072455] }],
-                    '01': [{ name: '桔子水晶酒店', lnglat: [116.413384, 39.908823] }, { name: '天安门广场', lnglat: [116.397470, 39.908689] }, { name: '天坛公园', lnglat: [116.419850, 39.881820] }, { name: '什刹海冰场', lnglat: [116.396507, 39.942976] }],
-                    '02': [{ name: '桔子水晶酒店', lnglat: [116.413384, 39.908823] }, { name: '故宫博物院', lnglat: [116.390631, 39.916404] }, { name: '景山公园', lnglat: [116.393800, 39.924400] }, { name: '三里屯', lnglat: [116.465100, 39.936300] }],
-                    '03': [{ name: '桔子水晶酒店', lnglat: [116.413384, 39.908823] }, { name: '地坛公园', lnglat: [116.441800, 39.936700] }, { name: '五道营胡同', lnglat: [116.445200, 39.938500] }, { name: '首都机场T3', lnglat: [116.607960, 40.076570] }]
-                };
-                
-                for (const day in locations) {
-                    markers[day] = [];
-                    locations[day].forEach(loc => {
-                        const marker = new AMap.Marker({
-                            position: loc.lnglat,
-                            title: loc.name,
-                            map: day === currentDay ? map : null,
-                            label: { 
-                                content: loc.name, 
-                                offset: new AMap.Pixel(0, -20), 
-                                fontSize: '11px',
-                                className: 'custom-marker-label'
-                            },
-                            icon: new AMap.Icon({
-                                size: new AMap.Size(24, 36),
-                                image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
-                                imageSize: new AMap.Size(24, 36)
-                            })
-                        });
-                        markers[day].push(marker);
-                    });
-                }
-                
+                currentDay = this.dataset.day;
                 updateDistanceInfo(currentDay);
-                
-                document.querySelectorAll('.day-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                        
-                        markers[currentDay].forEach(m => m.setMap(null));
-                        currentDay = this.dataset.day;
-                        markers[currentDay].forEach(m => m.setMap(map));
-                        map.setCenter(markers[currentDay][0].getPosition());
-                        
-                        updateDistanceInfo(currentDay);
-                    });
-                });
-                
-                mapInitialized = true;
-            } catch (e) {
-                document.getElementById('map').innerHTML = `
-                    <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;color:#666;padding:20px;text-align:center;">
-                        <i class="fa fa-map-o" style="font-size:30px;margin-bottom:10px;color:#9E2A2B;"></i>
-                        <div>地图加载失败</div>
-                        <div style="font-size:10px;margin-top:5px;">错误原因：${e.message}</div>
-                        <div style="font-size:10px;margin-top:5px;">排查建议：</div>
-                        <div style="font-size:9px;margin-top:3px;text-align:left;line-height:1.5;">
-                            1. 检查Nginx代理配置是否正确<br>
-                            2. 确认代理服务器可访问<br>
-                            3. 检查API Key是否有效
-                        </div>
-                    </div>
-                `;
-                console.error('地图加载失败:', e);
-                updateDistanceInfo(currentDay);
-            }
-        }
-        
-        window.addEventListener('load', () => {
-            updateDistanceInfo(currentDay);
-            
-            setTimeout(() => {
-                if (document.getElementById('map-page').classList.contains('active')) {
-                    initMap();
-                }
-            }, 500);
+            });
         });
         
-        const style = document.createElement('style');
-        style.textContent = `
-            .custom-marker-label {
-                background: rgba(255,255,255,0.9);
-                padding: 2px 5px;
-                border-radius: 2px;
-                border: 1px solid #ddd;
-                white-space: nowrap;
-            }
-        `;
-        document.head.appendChild(style);
+        // 页面加载时初始化距离信息
+        window.addEventListener('load', () => {
+            updateDistanceInfo(currentDay);
+        });
     </script>
 </body>
 </html>
