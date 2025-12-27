@@ -381,9 +381,10 @@
     <script type="text/javascript">
         // 配置代理服务器地址（必须在高德API加载前设置）
         window._AMapSecurityConfig = {
-            // 本地测试：指向Nginx配置的地址，_AMapService是固定前缀，不可改
+            // 80端口版本（默认）
             serviceHost: "http://127.0.0.1/_AMapService",
-            // 线上部署时替换为："https://你的域名/_AMapService"
+            // 如果你改了8080端口，把上面一行换成这个：
+            // serviceHost: "http://127.0.0.1:8080/_AMapService",
         };
         // 移除原有的securityJsCode配置，改为通过Nginx转发
     </script>
