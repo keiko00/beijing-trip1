@@ -2,28 +2,28 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>北京1.1-1.3行程时间轴</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11和14北京GO</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "Microsoft YaHei", "Heiti SC", sans-serif;
+            font-family: "Microsoft YaHei", sans-serif;
         }
         
         body {
             background-color: #f5f7fa;
             color: #333;
             line-height: 1.6;
-            padding-bottom: 80px;
+            padding-bottom: 70px;
         }
         
-        /* 头部样式 - 故宫红色系 */
+        /* 头部样式 */
         .header {
             background: linear-gradient(135deg, #9E2A2B 0%, #BB3A3A 100%);
             color: white;
-            padding: 20px 15px;
+            padding: 15px;
             text-align: center;
             position: sticky;
             top: 0;
@@ -32,105 +32,81 @@
         }
         
         .header h1 {
-            font-size: 22px;
-            margin-bottom: 8px;
+            font-size: 20px;
+            margin-bottom: 5px;
         }
         
         .header p {
-            font-size: 14px;
+            font-size: 13px;
             opacity: 0.9;
         }
         
-        /* 统计卡片样式 - 只保留两项 */
-        .stats-container {
-            display: flex;
-            flex-wrap: wrap;
-            padding: 15px;
-            gap: 10px;
-            background-color: white;
-            margin: 15px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        
-        .stat-card {
-            flex: 1;
-            min-width: 120px;
-            text-align: center;
-            padding: 12px 8px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-        }
-        
-        .stat-card .value {
-            font-size: 18px;
-            font-weight: bold;
-            color: #9E2A2B;
-            margin-bottom: 4px;
-        }
-        
-        .stat-card .label {
-            font-size: 12px;
-            color: #666;
-        }
-        
-        /* 日期分组样式 - 宫墙红色系 */
+        /* 日期分组样式 */
         .date-group {
-            margin: 15px;
-            border-radius: 12px;
+            margin: 10px;
+            border-radius: 8px;
             background-color: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             overflow: hidden;
         }
         
         .date-header {
             background-color: #BB3A3A;
             color: white;
-            padding: 12px 15px;
+            padding: 10px 15px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
         }
         
         .date-header .day-cost {
-            font-size: 14px;
+            font-size: 13px;
             opacity: 0.9;
             font-weight: normal;
         }
         
+        .date-header .sun-time {
+            font-size: 11px;
+            opacity: 0.9;
+            font-weight: normal;
+            width: 100%;
+            margin-top: 3px;
+        }
+        
         /* 行程项样式 */
         .schedule-list {
-            padding: 10px 0;
+            padding: 8px 0;
         }
         
         .schedule-item {
-            padding: 12px 15px;
+            padding: 10px 15px;
             border-bottom: 1px solid #f1f1f1;
             display: flex;
-            gap: 12px;
-            position: relative;
+            gap: 10px;
         }
         
         .schedule-item:last-child {
             border-bottom: none;
         }
         
-        /* 时间标签 - 调整宽度以适配更长的时间文本 */
+        /* 时间标签 */
         .time-tag {
-            width: 100px; /* 从80px调整为100px，确保04:30-06:36能完整显示 */
+            width: 85px;
             text-align: center;
-            padding: 8px 5px;
+            padding: 6px 3px;
             background-color: #fde8e8;
             color: #9E2A2B;
-            border-radius: 6px;
-            font-size: 12px; /* 略微缩小字体，提升适配性 */
+            border-radius: 4px;
+            font-size: 11px;
             font-weight: bold;
-            flex-shrink: 0; /* 关键：防止宽度被压缩 */
-            white-space: nowrap; /* 关键：强制文本在一行显示 */
-            overflow: hidden; /* 防止溢出 */
-            text-overflow: ellipsis; /* 极端情况显示省略号 */
+            flex-shrink: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         /* 行程内容 */
@@ -139,16 +115,16 @@
         }
         
         .schedule-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             color: #333;
         }
         
         .schedule-remind {
-            font-size: 12px;
+            font-size: 11px;
             color: #666;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             line-height: 1.4;
         }
         
@@ -159,22 +135,17 @@
         }
         
         .cost-tag {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             color: #9E2A2B;
         }
         
         .cost-desc {
-            font-size: 11px;
+            font-size: 10px;
             color: #999;
         }
         
-        /* 有费用的行程项 - 移除浅红色背景，改为纯白色 */
-        .schedule-item.has-cost {
-            background-color: #ffffff;
-        }
-        
-        /* 底部导航 - 行程表、费用、地图 */
+        /* 底部导航 */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -183,15 +154,15 @@
             background-color: white;
             display: flex;
             justify-content: space-around;
-            padding: 12px 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            padding: 8px 0;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
             z-index: 99;
         }
         
         .nav-item {
             text-align: center;
             color: #666;
-            font-size: 12px;
+            font-size: 11px;
         }
         
         .nav-item.active {
@@ -199,11 +170,11 @@
         }
         
         .nav-item i {
-            font-size: 18px;
-            margin-bottom: 4px;
+            font-size: 16px;
+            margin-bottom: 3px;
         }
         
-        /* 页面容器 - 默认隐藏非当前页 */
+        /* 页面容器 */
         .page {
             display: none;
         }
@@ -214,139 +185,103 @@
         
         /* 费用统计页面样式 */
         .cost-page {
-            padding: 15px;
+            padding: 10px;
         }
         
         .cost-section {
             background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            padding: 15px;
-            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 12px;
+            margin-bottom: 10px;
         }
         
         .cost-section h3 {
-            font-size: 16px;
+            font-size: 15px;
             color: #9E2A2B;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
             border-bottom: 1px solid #f1f1f1;
         }
         
         .total-cost {
             text-align: center;
-            padding: 20px 0;
+            padding: 15px 0;
         }
         
         .total-cost .amount {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             color: #9E2A2B;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
         
         .total-cost .desc {
-            font-size: 14px;
+            font-size: 12px;
             color: #666;
         }
         
-        .daily-cost-list {
-            margin-top: 10px;
+        .daily-cost-list, .detail-cost-list {
+            margin-top: 8px;
         }
         
-        .daily-cost-item {
+        .daily-cost-item, .detail-cost-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 6px 0;
             border-bottom: 1px solid #f1f1f1;
         }
         
-        .daily-cost-item:last-child {
+        .daily-cost-item:last-child, .detail-cost-item:last-child {
             border-bottom: none;
         }
         
-        .daily-cost-item .day {
-            font-weight: bold;
+        .daily-cost-item .day, .detail-cost-item .name {
+            font-size: 13px;
             color: #333;
         }
         
-        .daily-cost-item .cost {
-            color: #9E2A2B;
-            font-weight: bold;
-        }
-        
-        /* 饼图尺寸缩小到1/4：原250px → 62.5px */
-        .cost-category-chart {
-            width: 100%;
-            height: 62.5px;
-            margin: 10px 0;
-            /* 居中显示 */
-            margin-left: auto;
-            margin-right: auto;
-            max-width: 200px;
-        }
-        
-        .detail-cost-list {
-            margin-top: 10px;
-        }
-        
-        .detail-cost-item {
-            display: flex;
-            flex-wrap: wrap;
-            padding: 10px 0;
-            border-bottom: 1px solid #f1f1f1;
-        }
-        
-        .detail-cost-item:last-child {
-            border-bottom: none;
-        }
-        
-        .detail-cost-item .name {
-            flex: 2;
-            color: #333;
-        }
-        
-        .detail-cost-item .cost {
-            flex: 1;
-            text-align: right;
+        .daily-cost-item .cost, .detail-cost-item .cost {
+            font-size: 12px;
             color: #9E2A2B;
             font-weight: bold;
         }
         
         /* 地图页面样式 */
         .map-page {
-            padding: 15px;
+            padding: 10px;
         }
         
         .map-controls {
             background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            padding: 15px;
-            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 12px;
+            margin-bottom: 10px;
         }
         
         .map-controls h3 {
-            font-size: 16px;
+            font-size: 15px;
             color: #9E2A2B;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         
         .day-selector {
             display: flex;
-            gap: 8px;
-            margin-bottom: 10px;
+            gap: 6px;
+            margin-bottom: 8px;
             flex-wrap: wrap;
         }
         
         .day-btn {
-            padding: 6px 12px;
+            padding: 5px 10px;
             background-color: #f8f9fa;
             border: 1px solid #ddd;
-            border-radius: 6px;
+            border-radius: 4px;
             color: #666;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
+            transition: all 0.2s ease;
         }
         
         .day-btn.active {
@@ -355,14 +290,15 @@
             border-color: #9E2A2B;
         }
         
+        /* 优化地图容器尺寸 */
         .map-container {
             width: 100%;
-            height: 400px;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            height: 300px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             overflow: hidden;
-            position: relative;
+            margin: 0 auto;
         }
         
         #map {
@@ -372,10 +308,18 @@
         
         .location-distance {
             background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            padding: 15px;
-            margin-top: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 12px;
+            margin-top: 10px;
+        }
+        
+        .location-distance h3 {
+            font-size: 15px;
+            color: #9E2A2B;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #f1f1f1;
         }
         
         .distance-item {
@@ -388,99 +332,117 @@
         }
         
         .distance-item .route {
-            font-size: 14px;
+            font-size: 13px;
             color: #333;
             margin-bottom: 4px;
+            font-weight: 500;
         }
         
         .distance-item .distance {
-            font-size: 12px;
+            font-size: 11px;
             color: #9E2A2B;
             font-weight: bold;
+            margin-bottom: 2px;
+        }
+        
+        .distance-item .transport {
+            font-size: 10px;
+            color: #666;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .transport-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .transport-item i {
+            font-size: 9px;
+            color: #9E2A2B;
         }
         
         /* 响应式调整 */
-        @media (max-width: 320px) {
-            .stat-card {
-                min-width: 100px;
-            }
-            
+        @media (max-width: 375px) {
             .time-tag {
-                width: 90px; /* 响应式下略微调整，保持适配 */
-                font-size: 11px; /* 进一步缩小字体 */
+                width: 75px;
+                font-size: 10px;
             }
-            
             .map-container {
-                height: 300px;
+                height: 250px;
             }
-            
-            /* 响应式下饼图进一步缩小 */
-            .cost-category-chart {
-                height: 50px;
-                max-width: 150px;
+            .transport-item {
+                gap: 2px;
+            }
+            .distance-item .transport {
+                gap: 10px;
             }
         }
+        
+        /* 红色强调样式 */
+        .highlight-red {
+            color: #9E2A2B;
+            font-weight: bold;
+        }
     </style>
-    <!-- 引入图标库 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- 引入Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- 引入高德地图API（已替换为你的密钥） -->
-    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=88dcaf9099d9f0a306a959392a8c7e1f"></script>
+    <!-- 精简外部依赖 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <!-- 高德地图API - 修正为正确的密钥配置 -->
+    <script type="text/javascript">
+        // 安全密钥（SecurityJsCode）
+        window._AMapSecurityConfig = {
+            securityJsCode: '88dcaf9099d9f0a306a959392a8c7e1f', 
+        };
+        // API Key配置
+        window.initAMapApiLoader = {
+            key: '3bd2861bb1307c9b6f82021b723681fb', // 替换为正确的API Key
+            version: '2.0',
+            plugins: ['AMap.Marker', 'AMap.Scale', 'AMap.ToolBar']
+        };
+    </script>
+    <!-- 高德地图API加载 -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=3bd2861bb1307c9b6f82021b723681fb"></script>
 </head>
 <body>
     <!-- 头部 -->
     <div class="header">
-        <h1>11和14的北京行程gogogo！</h1>
+        <h1>11和14北京GO</h1>
         <p>12.31-1.3 详细行程安排</p>
     </div>
     
     <!-- 行程表页面 -->
     <div class="page active" id="schedule-page">
-        <!-- 统计卡片 - 只保留旅行天数和总费用 -->
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="value">4天</div>
-                <div class="label">旅行天数</div>
-            </div>
-            <div class="stat-card">
-                <div class="value">¥7,417.80</div>
-                <div class="label">总费用</div>
-            </div>
-        </div>
-        
-        <!-- 行程内容区 -->
         <div class="schedule-content">
             <!-- 12.31 行程 -->
             <div class="date-group">
                 <div class="date-header">
-                    <span>12月31日（除夕）</span>
+                    <span>12月31日（星期三）</span>
                     <span class="day-cost">当日费用：¥6,547.00</span>
                 </div>
                 <div class="schedule-list">
-                    <div class="schedule-item has-cost">
+                    <div class="schedule-item">
                         <div class="time-tag">15:40</div>
                         <div class="schedule-content">
                             <div class="schedule-title">网易→萧山机场T3</div>
-                            <div class="schedule-remind">已预约包车，提前2小时到机场值机，携带身份证</div>
+                            <div class="schedule-remind">已预约包车，提前2小时到机场值机</div>
                             <div class="schedule-cost">
                                 <span class="cost-tag">¥41.00</span>
                                 <span class="cost-desc">网易-萧山机场接机</span>
                             </div>
                         </div>
                     </div>
-                    <div class="schedule-item has-cost">
+                    <div class="schedule-item">
                         <div class="time-tag">17:50-20:30</div>
                         <div class="schedule-content">
                             <div class="schedule-title">杭州萧山机场T3→北京首都机场T2</div>
-                            <div class="schedule-remind">无特殊提醒</div>
                             <div class="schedule-cost">
                                 <span class="cost-tag">¥4,068.00</span>
                                 <span class="cost-desc">杭州-北京飞机（往返2人）</span>
                             </div>
                         </div>
                     </div>
-                    <div class="schedule-item has-cost">
+                    <div class="schedule-item">
                         <div class="time-tag">21:00-22:00</div>
                         <div class="schedule-content">
                             <div class="schedule-title">机场→酒店</div>
@@ -491,11 +453,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="schedule-item has-cost">
+                    <div class="schedule-item">
                         <div class="time-tag">22:30</div>
                         <div class="schedule-content">
                             <div class="schedule-title">酒店休息</div>
-                            <div class="schedule-remind">无特殊提醒</div>
                             <div class="schedule-cost">
                                 <span class="cost-tag">¥2,379.00</span>
                                 <span class="cost-desc">北京崇文门桔子水晶酒店（3晚）</span>
@@ -508,86 +469,60 @@
             <!-- 1.1 行程 -->
             <div class="date-group">
                 <div class="date-header">
-                    <span>1月1日（元旦）</span>
+                    <span>1月1日（星期四）</span>
                     <span class="day-cost">当日费用：¥121.80</span>
+                    <span class="sun-time">日出：07:36 | 日落：16:59</span>
                 </div>
                 <div class="schedule-list">
                     <div class="schedule-item">
-                        <!-- 修改：时间改为04:30-06:36 -->
                         <div class="time-tag">04:30-06:36</div>
                         <div class="schedule-content">
-                            <div class="schedule-title">天安门广场西红墙安检01入场，升旗</div>
-                            <div class="schedule-remind">提前1-9天在「天安门广场预约参观」小程序约升旗时段；带身份证+折叠凳+暖宝宝+保温杯热水</div>
-                            <div class="schedule-cost">
-                                <span class="cost-tag">¥0.00</span>
-                                <span class="cost-desc">无费用</span>
-                            </div>
+                            <div class="schedule-title">天安门广场升旗</div>
+                            <div class="schedule-remind">西红墙安检01入场，带身份证+折叠凳+暖宝宝+保温杯热水</div>
                         </div>
                     </div>
                     <div class="schedule-item">
                         <div class="time-tag">08:00-11:30</div>
                         <div class="schedule-content">
                             <div class="schedule-title">天安门广场→酒店休息</div>
-                            <div class="schedule-remind">车程20min，回酒店补觉、休整</div>
-                            <div class="schedule-cost">
-                                <span class="cost-tag">¥0.00</span>
-                                <span class="cost-desc">无费用</span>
-                            </div>
+                            <div class="schedule-remind">车程20min，回酒店补觉</div>
                         </div>
                     </div>
                     <div class="schedule-item">
                         <div class="time-tag">12:00-13:00</div>
                         <div class="schedule-content">
-                            <div class="schedule-title">待安排</div>
-                            <div class="schedule-remind">无特殊提醒</div>
-                            <div class="schedule-cost">
-                                <span class="cost-tag">¥0.00</span>
-                                <span class="cost-desc">无费用</span>
-                            </div>
+                            <div class="schedule-title">附近午餐</div>
                         </div>
                     </div>
-                    <div class="schedule-item has-cost">
+                    <div class="schedule-item">
                         <div class="time-tag">13:00-16:00</div>
                         <div class="schedule-content">
                             <div class="schedule-title">天安门城楼 + 人民大会堂 + 天坛公园</div>
-                            <div class="schedule-remind">1.登天安门城楼俯瞰广场（需预约）；2.参观人民大会堂外景/内部（需预约）；3.天坛公园（北门进南门出）</div>
+                            <div class="schedule-remind">1. 登天安门城楼俯瞰广场；<br>2. 参观人民大会堂外景 / 内部；<br>3. 逛天坛公园，打卡祈年殿，回音壁；<span class="highlight-red">南门涮肉</span></div>
                             <div class="schedule-cost">
-                                <span class="cost-tag">¥65.80</span>
-                                <span class="cost-desc">天安门城楼（2人）</span>
+                                <span class="cost-tag">¥121.80</span>
+                                <span class="cost-desc">天安门城楼（2人）：65.8元；天坛公园（2人）：56元</span>
                             </div>
                         </div>
                     </div>
-                    <div class="schedule-item has-cost">
+                    <div class="schedule-item">
                         <div class="time-tag">16:00-19:00</div>
                         <div class="schedule-content">
                             <div class="schedule-title">什刹海冰场</div>
-                            <div class="schedule-remind">提前购票（美团/大众点评），携带身份证，冰鞋需押金</div>
-                            <div class="schedule-cost">
-                                <span class="cost-tag">¥56.00</span>
-                                <span class="cost-desc">天坛公园（2人）</span>
-                            </div>
+                            <div class="schedule-remind">现场购票，带身份证<br>傍晚灯光亮起时拍照氛围感拉满</div>
+                            <!-- 移除什刹海的费用展示 -->
                         </div>
                     </div>
                     <div class="schedule-item">
                         <div class="time-tag">19:00-20:30</div>
                         <div class="schedule-content">
-                            <div class="schedule-title">前门大街晚餐，夜景</div>
-                            <div class="schedule-remind">推荐四季民福烤鸭店（需提前预约）</div>
-                            <div class="schedule-cost">
-                                <span class="cost-tag">¥0.00</span>
-                                <span class="cost-desc">无费用</span>
-                            </div>
+                            <div class="schedule-title">前门大街晚餐</div>
                         </div>
                     </div>
                     <div class="schedule-item">
                         <div class="time-tag">20:30后</div>
                         <div class="schedule-content">
                             <div class="schedule-title">酒店</div>
-                            <div class="schedule-remind">无特殊提醒</div>
-                            <div class="schedule-cost">
-                                <span class="cost-tag">¥0.00</span>
-                                <span class="cost-desc">无费用</span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -596,51 +531,37 @@
             <!-- 1.2 行程 -->
             <div class="date-group">
                 <div class="date-header">
-                    <span>1月2日（核心日）</span>
-                    <span class="day-cost">当日费用：¥749.00</span>
+                    <span>1月2日（星期五）</span>
+                    <span class="day-cost">当日费用：¥753.00</span>
+                    <span class="sun-time">日落：17:00</span>
                 </div>
                 <div class="schedule-list">
-                    <div class="schedule-item has-cost">
-                        <div class="time-tag">10:30</div>
+                    <div class="schedule-item">
+                        <div class="time-tag">10:00</div>
                         <div class="schedule-content">
-                            <div class="schedule-title">星光兔西扶海棠-格格妆造</div>
-                            <div class="schedule-remind">11点档期，需提前半小时到店（路程30min）王府世纪6楼601A</div>
+                            <div class="schedule-title">西扶海棠-格格妆造</div>
+                            <div class="schedule-remind">11点档期，王府世纪6楼601A<br>行程半小时，需提前半小时到</div>
                             <div class="schedule-cost">
                                 <span class="cost-tag">¥499.00</span>
-                                <span class="cost-desc">西扶海棠（单人，仅妆造）</span>
+                                <span class="cost-desc">单人仅妆造</span>
                             </div>
                         </div>
                     </div>
                     <div class="schedule-item">
-                        <div class="time-tag">10:00-12:00</div>
+                        <div class="time-tag">13:00</div>
                         <div class="schedule-content">
-                            <div class="schedule-title">东华门 / 午门广场 / 故宫角楼（外景）</div>
-                            <div class="schedule-remind">外围拍摄不进故宫</div>
-                            <div class="schedule-cost">
-                                <span class="cost-tag">¥0.00</span>
-                                <span class="cost-desc">无费用</span>
-                            </div>
+                            <div class="schedule-title">故宫角楼外景拍摄+附近午餐</div>
+                            <div class="schedule-remind">东华门 / 午门广场 / 故宫角楼（外景）拍摄</div>
                         </div>
                     </div>
                     <div class="schedule-item">
-                        <div class="time-tag">12:00-13:00</div>
-                        <div class="schedule-content">
-                            <div class="schedule-title">附近午餐</div>
-                            <div class="schedule-remind">无特殊提醒</div>
-                            <div class="schedule-cost">
-                                <span class="cost-tag">¥0.00</span>
-                                <span class="cost-desc">无费用</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="schedule-item has-cost">
                         <div class="time-tag">13:00-16:30</div>
                         <div class="schedule-content">
-                            <div class="schedule-title">故宫博物院（午门进，神武门出）</div>
-                            <div class="schedule-remind">提前7天20:00在「故宫博物院」小程序约下午场（11:00后入园），15:30神武门出</div>
+                            <div class="schedule-title">故宫博物院</div>
+                            <div class="schedule-remind">下午场（11:00后入园），15:30神武门出<br>中轴线 + 御花园 + 珍宝馆 + 钟表馆</div>
                             <div class="schedule-cost">
                                 <span class="cost-tag">¥246.00</span>
-                                <span class="cost-desc">故宫（下午场，含珍宝馆+钟表馆，2人）</span>
+                                <span class="cost-desc">含珍宝馆+钟表馆（2人）</span>
                             </div>
                         </div>
                     </div>
@@ -648,44 +569,30 @@
                         <div class="time-tag">16:30-17:00</div>
                         <div class="schedule-content">
                             <div class="schedule-title">神武门→西扶海棠归还衣服</div>
-                            <div class="schedule-remind">无特殊提醒</div>
-                            <div class="schedule-cost">
-                                <span class="cost-tag">¥0.00</span>
-                                <span class="cost-desc">无费用</span>
-                            </div>
+                            <div class="schedule-remind">最晚19:00 归还</div>
                         </div>
                     </div>
                     <div class="schedule-item">
                         <div class="time-tag">17:00-17:30</div>
                         <div class="schedule-content">
                             <div class="schedule-title">景山公园</div>
-                            <div class="schedule-remind">无特殊提醒</div>
+                            <div class="schedule-remind">登万春亭，俯瞰故宫全景，17:00 前入园<br>19：30停止入园，20：00闭园<br>园内景点院落16：30停止进入，17：00关门</div>
                             <div class="schedule-cost">
-                                <span class="cost-tag">¥0.00</span>
-                                <span class="cost-desc">无费用</span>
+                                <span class="cost-tag">¥4.00</span>
+                                <span class="cost-desc">门票（2人）</span>
                             </div>
                         </div>
                     </div>
                     <div class="schedule-item">
                         <div class="time-tag">17:30-19:00</div>
                         <div class="schedule-content">
-                            <div class="schedule-title">三里屯 / 北新桥晚餐</div>
-                            <div class="schedule-remind">无特殊提醒</div>
-                            <div class="schedule-cost">
-                                <span class="cost-tag">¥0.00</span>
-                                <span class="cost-desc">无费用</span>
-                            </div>
+                            <div class="schedule-title">三里屯/北新桥晚餐</div>
                         </div>
                     </div>
                     <div class="schedule-item">
                         <div class="time-tag">19:00后</div>
                         <div class="schedule-content">
                             <div class="schedule-title">酒店</div>
-                            <div class="schedule-remind">无特殊提醒</div>
-                            <div class="schedule-cost">
-                                <span class="cost-tag">¥0.00</span>
-                                <span class="cost-desc">无费用</span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -694,7 +601,7 @@
             <!-- 1.3 行程 -->
             <div class="date-group">
                 <div class="date-header">
-                    <span>1月3日（返程日）</span>
+                    <span>1月3日（星期六）</span>
                     <span class="day-cost">当日费用：¥0.00</span>
                 </div>
                 <div class="schedule-list">
@@ -702,44 +609,26 @@
                         <div class="time-tag">09:00-12:00</div>
                         <div class="schedule-content">
                             <div class="schedule-title">地坛公园 / 五道营胡同</div>
-                            <div class="schedule-remind">无特殊提醒</div>
-                            <div class="schedule-cost">
-                                <span class="cost-tag">¥0.00</span>
-                                <span class="cost-desc">无费用</span>
-                            </div>
                         </div>
                     </div>
                     <div class="schedule-item">
                         <div class="time-tag">12:00-14:00</div>
                         <div class="schedule-content">
                             <div class="schedule-title">附近午餐</div>
-                            <div class="schedule-remind">无特殊提醒</div>
-                            <div class="schedule-cost">
-                                <span class="cost-tag">¥0.00</span>
-                                <span class="cost-desc">无费用</span>
-                            </div>
                         </div>
                     </div>
                     <div class="schedule-item">
                         <div class="time-tag">15:00-17:45</div>
                         <div class="schedule-content">
                             <div class="schedule-title">酒店→北京首都机场</div>
-                            <div class="schedule-remind">无特殊提醒</div>
-                            <div class="schedule-cost">
-                                <span class="cost-tag">¥0.00</span>
-                                <span class="cost-desc">无费用</span>
-                            </div>
+                            <div class="schedule-remind">提前 2 小时到机场，地铁机场线约 40 分钟</div>
                         </div>
                     </div>
                     <div class="schedule-item">
                         <div class="time-tag">19:45-21:50</div>
                         <div class="schedule-content">
                             <div class="schedule-title">北京首都机场T3→杭州萧山机场T3</div>
-                            <div class="schedule-remind">无特殊提醒</div>
-                            <div class="schedule-cost">
-                                <span class="cost-tag">¥0.00</span>
-                                <span class="cost-desc">无费用（已含在往返机票中）</span>
-                            </div>
+                            <div class="schedule-remind">已含在往返机票中</div>
                         </div>
                     </div>
                 </div>
@@ -754,7 +643,7 @@
             <div class="cost-section">
                 <h3>总费用统计</h3>
                 <div class="total-cost">
-                    <div class="amount">¥7,417.80</div>
+                    <div class="amount">¥7,421.80</div>
                     <div class="desc">北京4日行程总费用（2人）</div>
                 </div>
             </div>
@@ -764,65 +653,55 @@
                 <h3>每日费用明细</h3>
                 <div class="daily-cost-list">
                     <div class="daily-cost-item">
-                        <span class="day">12月31日（除夕）</span>
+                        <span class="day">12月31日（星期三）</span>
                         <span class="cost">¥6,547.00</span>
                     </div>
                     <div class="daily-cost-item">
-                        <span class="day">1月1日（元旦）</span>
+                        <span class="day">1月1日（星期四）</span>
                         <span class="cost">¥121.80</span>
                     </div>
                     <div class="daily-cost-item">
-                        <span class="day">1月2日（核心日）</span>
-                        <span class="cost">¥749.00</span>
+                        <span class="day">1月2日（星期五）</span>
+                        <span class="cost">¥753.00</span>
                     </div>
                     <div class="daily-cost-item">
-                        <span class="day">1月3日（返程日）</span>
+                        <span class="day">1月3日（星期六）</span>
                         <span class="cost">¥0.00</span>
                     </div>
                 </div>
             </div>
             
-            <!-- 费用分类统计 -->
+            <!-- 核心费用明细（精简） -->
             <div class="cost-section">
-                <h3>费用分类统计</h3>
-                <canvas class="cost-category-chart" id="costCategoryChart"></canvas>
-            </div>
-            
-            <!-- 详细费用明细 -->
-            <div class="cost-section">
-                <h3>详细费用明细</h3>
+                <h3>核心费用明细</h3>
                 <div class="detail-cost-list">
                     <div class="detail-cost-item">
-                        <span class="name">网易-萧山机场接机</span>
-                        <span class="cost">¥41.00</span>
-                    </div>
-                    <div class="detail-cost-item">
-                        <span class="name">杭州-北京飞机（往返2人）</span>
+                        <span class="name">杭州-北京往返机票（2人）</span>
                         <span class="cost">¥4,068.00</span>
                     </div>
                     <div class="detail-cost-item">
-                        <span class="name">首都机场-酒店接机</span>
-                        <span class="cost">¥59.00</span>
-                    </div>
-                    <div class="detail-cost-item">
-                        <span class="name">北京崇文门桔子水晶酒店（3晚）</span>
+                        <span class="name">酒店住宿（3晚）</span>
                         <span class="cost">¥2,379.00</span>
                     </div>
                     <div class="detail-cost-item">
-                        <span class="name">天安门城楼（2人）</span>
-                        <span class="cost">¥65.80</span>
+                        <span class="name">故宫门票（含展馆）</span>
+                        <span class="cost">¥246.00</span>
                     </div>
                     <div class="detail-cost-item">
-                        <span class="name">天坛公园（2人）</span>
-                        <span class="cost">¥56.00</span>
-                    </div>
-                    <div class="detail-cost-item">
-                        <span class="name">西扶海棠（单人，仅妆造）</span>
+                        <span class="name">西扶海棠妆造</span>
                         <span class="cost">¥499.00</span>
                     </div>
                     <div class="detail-cost-item">
-                        <span class="name">故宫（下午场，含珍宝馆+钟表馆，2人）</span>
-                        <span class="cost">¥246.00</span>
+                        <span class="name">景山公园门票</span>
+                        <span class="cost">¥4.00</span>
+                    </div>
+                    <div class="detail-cost-item">
+                        <span class="name">天安门城楼+天坛公园（2人）</span>
+                        <span class="cost">¥121.80</span>
+                    </div>
+                    <div class="detail-cost-item">
+                        <span class="name">其他交通费用</span>
+                        <span class="cost">¥100.00</span>
                     </div>
                 </div>
             </div>
@@ -840,59 +719,35 @@
                     <button class="day-btn" data-day="02">1月2日</button>
                     <button class="day-btn" data-day="03">1月3日</button>
                 </div>
-                <p style="font-size:12px;color:#666;">点击日期按钮查看对应行程位置，地图可缩放、拖拽</p>
+                <p style="font-size:11px;color:#666;">点击日期查看对应行程位置和交通信息</p>
             </div>
             
             <div class="map-container">
                 <div id="map"></div>
             </div>
             
+            <!-- 动态距离信息 -->
             <div class="location-distance">
-                <h3>位置距离参考</h3>
-                <div class="distance-item">
-                    <div class="route">崇文门桔子水晶酒店 → 天安门广场</div>
-                    <div class="distance">约3.5公里，车程15分钟</div>
-                </div>
-                <div class="distance-item">
-                    <div class="route">天安门广场 → 天坛公园</div>
-                    <div class="distance">约4.2公里，车程20分钟</div>
-                </div>
-                <div class="distance-item">
-                    <div class="route">天坛公园 → 什刹海冰场</div>
-                    <div class="distance">约7.8公里，车程30分钟</div>
-                </div>
-                <div class="distance-item">
-                    <div class="route">崇文门桔子水晶酒店 → 故宫博物院</div>
-                    <div class="distance">约4.8公里，车程25分钟</div>
-                </div>
-                <div class="distance-item">
-                    <div class="route">故宫博物院 → 景山公园</div>
-                    <div class="distance">约0.8公里，步行15分钟</div>
-                </div>
-                <div class="distance-item">
-                    <div class="route">崇文门桔子水晶酒店 → 地坛公园</div>
-                    <div class="distance">约5.6公里，车程25分钟</div>
-                </div>
-                <div class="distance-item">
-                    <div class="route">崇文门桔子水晶酒店 → 北京首都机场</div>
-                    <div class="distance">约28公里，车程45分钟</div>
+                <h3 id="distance-title">12月31日 核心位置距离</h3>
+                <div id="distance-list" class="distance-list">
+                    <!-- 动态填充距离信息 -->
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- 底部导航 - 行程表、费用、地图 -->
+    <!-- 底部导航 -->
     <div class="bottom-nav">
         <div class="nav-item active" data-page="schedule-page">
-            <i class="fas fa-calendar-alt"></i>
+            <i class="fa fa-calendar"></i>
             <div>行程表</div>
         </div>
         <div class="nav-item" data-page="cost-page">
-            <i class="fas fa-coins"></i>
+            <i class="fa fa-money"></i>
             <div>费用统计</div>
         </div>
         <div class="nav-item" data-page="map-page">
-            <i class="fas fa-map-marked-alt"></i>
+            <i class="fa fa-map-marker"></i>
             <div>行程地图</div>
         </div>
     </div>
@@ -902,207 +757,270 @@
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', function() {
                 // 移除所有active类
-                document.querySelectorAll('.nav-item').forEach(nav => {
-                    nav.classList.remove('active');
-                });
-                document.querySelectorAll('.page').forEach(page => {
-                    page.classList.remove('active');
-                });
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
                 
                 // 添加当前active类
                 this.classList.add('active');
-                const pageId = this.getAttribute('data-page');
-                document.getElementById(pageId).classList.add('active');
+                document.getElementById(this.dataset.page).classList.add('active');
                 
-                // 切换到地图页面时重新初始化地图（解决地图加载失效问题）
-                if (pageId === 'map-page') {
-                    setTimeout(initMap, 100);
+                // 切换到地图页面时确保地图初始化
+                if (this.dataset.page === 'map-page' && !mapInitialized) {
+                    initMap();
                 }
             });
         });
         
-        // 行程项点击展开/收起提醒
-        document.querySelectorAll('.schedule-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const remind = this.querySelector('.schedule-remind');
-                if (remind.style.maxHeight) {
-                    remind.style.maxHeight = null;
-                } else {
-                    remind.style.maxHeight = remind.scrollHeight + 'px';
+        // 每日行程距离和交通数据
+        const distanceData = {
+            '31': [
+                {
+                    route: '首都机场T2 → 桔子水晶酒店（崇文门店）',
+                    distance: '约28公里',
+                    carTime: '车程45分钟',
+                    publicTime: '地铁2号线约1小时10分钟'
                 }
-            });
-        });
-        
-        // 费用分类统计图表
-        window.addEventListener('load', function() {
-            // 初始化费用分类饼图
-            const costCtx = document.getElementById('costCategoryChart').getContext('2d');
-            new Chart(costCtx, {
-                type: 'pie',
-                data: {
-                    labels: ['交通费用', '住宿费用', '景点门票', '体验费用'],
-                    datasets: [{
-                        data: [4168.00, 2379.00, 367.80, 499.00],
-                        backgroundColor: [
-                            '#9E2A2B',
-                            '#BB3A3A',
-                            '#D64933',
-                            '#E57373'
-                        ],
-                        borderColor: '#fff',
-                        borderWidth: 2
-                    }]
+            ],
+            '01': [
+                {
+                    route: '酒店 → 天安门广场',
+                    distance: '约3.5公里',
+                    carTime: '车程15分钟',
+                    publicTime: '地铁5号线转1号线约25分钟'
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 15,
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = Math.round((value / total) * 100);
-                                    return `${label}: ¥${value.toFixed(2)} (${percentage}%)`;
-                                }
-                            }
-                        }
-                    }
+                {
+                    route: '天安门广场 → 天坛公园',
+                    distance: '约4.2公里',
+                    carTime: '车程20分钟',
+                    publicTime: '地铁5号线约30分钟'
+                },
+                {
+                    route: '天坛公园 → 什刹海冰场',
+                    distance: '约7.8公里',
+                    carTime: '车程30分钟',
+                    publicTime: '地铁8号线转6号线约40分钟'
                 }
-            });
-            
-            // 页面加载完成后初始化地图
-            initMap();
-        });
+            ],
+            '02': [
+                {
+                    route: '酒店 → 故宫博物院',
+                    distance: '约4.8公里',
+                    carTime: '车程25分钟',
+                    publicTime: '地铁5号线转1号线约35分钟'
+                },
+                {
+                    route: '故宫博物院 → 景山公园',
+                    distance: '约0.8公里',
+                    carTime: '车程5分钟',
+                    publicTime: '步行约10分钟'
+                },
+                {
+                    route: '景山公园 → 三里屯',
+                    distance: '约7.5公里',
+                    carTime: '车程25分钟',
+                    publicTime: '地铁6号线转10号线约40分钟'
+                }
+            ],
+            '03': [
+                {
+                    route: '酒店 → 地坛公园',
+                    distance: '约5.2公里',
+                    carTime: '车程20分钟',
+                    publicTime: '地铁5号线约25分钟'
+                },
+                {
+                    route: '地坛公园 → 五道营胡同',
+                    distance: '约0.5公里',
+                    carTime: '车程3分钟',
+                    publicTime: '步行约8分钟'
+                },
+                {
+                    route: '酒店 → 首都机场T3',
+                    distance: '约29公里',
+                    carTime: '车程50分钟',
+                    publicTime: '地铁2号线转机场线约1小时15分钟'
+                }
+            ]
+        };
         
-        // 地图初始化和日期切换 - 修复版
-        let map;
-        let markers = {}; // 存储各日期的标记点
-        let currentDay = '31'; // 默认显示12月31日
-        
-        function initMap() {
-            // 先销毁已存在的地图实例，避免重复初始化
-            if (map) {
-                map.destroy();
-            }
-            
-            // 初始化高德地图，中心点设为北京崇文门
-            map = new AMap.Map('map', {
-                zoom: 12, // 初始缩放级别
-                center: [116.413384, 39.908823], // 崇文门坐标
-                resizeEnable: true,
-                scrollWheel: true // 允许鼠标滚轮缩放
-            });
-            
-            // 添加地图控件
-            map.addControl(new AMap.Scale());
-            map.addControl(new AMap.Zoom());
-            
-            // 定义各日期的位置点
-            const locations = {
-                '31': [ // 12月31日
-                    { name: '北京崇文门桔子水晶酒店', lnglat: [116.413384, 39.908823] },
-                    { name: '北京首都国际机场T2', lnglat: [116.600939, 40.072455] }
-                ],
-                '01': [ // 1月1日
-                    { name: '北京崇文门桔子水晶酒店', lnglat: [116.413384, 39.908823] },
-                    { name: '天安门广场', lnglat: [116.397470, 39.908689] },
-                    { name: '天坛公园', lnglat: [116.419850, 39.881824] },
-                    { name: '什刹海冰场', lnglat: [116.396507, 39.942976] },
-                    { name: '前门大街', lnglat: [116.390160, 39.904690] }
-                ],
-                '02': [ // 1月2日
-                    { name: '北京崇文门桔子水晶酒店', lnglat: [116.413384, 39.908823] },
-                    { name: '西扶海棠(王府世纪店)', lnglat: [116.403200, 39.915600] },
-                    { name: '故宫博物院', lnglat: [116.390631, 39.916404] },
-                    { name: '景山公园', lnglat: [116.397021, 39.925775] }
-                ],
-                '03': [ // 1月3日
-                    { name: '北京崇文门桔子水晶酒店', lnglat: [116.413384, 39.908823] },
-                    { name: '地坛公园', lnglat: [116.441800, 39.936700] },
-                    { name: '五道营胡同', lnglat: [116.445200, 39.938500] },
-                    { name: '北京首都国际机场T3', lnglat: [116.607960, 40.076570] }
-                ]
+        // 更新距离信息函数
+        function updateDistanceInfo(day) {
+            const dayNames = {
+                '31': '12月31日',
+                '01': '1月1日',
+                '02': '1月2日',
+                '03': '1月3日'
             };
             
-            // 清空原有标记点
-            markers = {};
+            // 更新标题
+            document.getElementById('distance-title').textContent = `${dayNames[day]} 核心位置距离`;
             
-            // 为每个日期创建标记点（先隐藏）
-            for (const day in locations) {
-                markers[day] = [];
-                locations[day].forEach(loc => {
-                    const marker = new AMap.Marker({
-                        position: loc.lnglat,
-                        title: loc.name,
-                        map: null, // 初始不显示
-                        label: {
-                            content: loc.name,
-                            offset: new AMap.Pixel(0, -30),
-                            fontSize: '12px',
-                            fontWeight: 'bold'
-                        }
-                    });
-                    markers[day].push(marker);
-                });
-            }
+            // 更新距离列表
+            const distanceList = document.getElementById('distance-list');
+            distanceList.innerHTML = '';
             
-            // 显示默认日期的标记点
-            showDayMarkers(currentDay);
-            
-            // 重新绑定日期选择按钮事件（解决切换失效问题）
-            document.querySelectorAll('.day-btn').forEach(btn => {
-                // 先移除原有事件，避免重复绑定
-                btn.onclick = null;
-                
-                btn.addEventListener('click', function() {
-                    // 移除所有active类
-                    document.querySelectorAll('.day-btn').forEach(b => {
-                        b.classList.remove('active');
-                    });
-                    this.classList.add('active');
-                    
-                    // 隐藏当前标记点，显示新日期的标记点
-                    hideDayMarkers(currentDay);
-                    currentDay = this.getAttribute('data-day');
-                    showDayMarkers(currentDay);
-                    
-                    // 地图居中到第一个标记点
-                    if (markers[currentDay] && markers[currentDay].length > 0) {
-                        map.setCenter(markers[currentDay][0].getPosition());
-                        map.setZoom(13);
-                    }
-                });
+            // 填充对应日期的距离信息
+            distanceData[day].forEach(item => {
+                const distanceItem = document.createElement('div');
+                distanceItem.className = 'distance-item';
+                distanceItem.innerHTML = `
+                    <div class="route">${item.route}</div>
+                    <div class="distance">${item.distance}</div>
+                    <div class="transport">
+                        <div class="transport-item">
+                            <i class="fa fa-car"></i> ${item.carTime}
+                        </div>
+                        <div class="transport-item">
+                            <i class="fa fa-subway"></i> ${item.publicTime}
+                        </div>
+                    </div>
+                `;
+                distanceList.appendChild(distanceItem);
             });
         }
         
-        // 显示指定日期的标记点
-        function showDayMarkers(day) {
-            if (markers[day]) {
-                markers[day].forEach(marker => {
-                    marker.setMap(map);
+        // 高德地图初始化 - 优化加载逻辑
+        let map, markers = {}, currentDay = '31', mapInitialized = false;
+        
+        function initMap() {
+            if (mapInitialized) return;
+            
+            try {
+                // 增加地图加载超时处理
+                const mapLoadTimeout = setTimeout(() => {
+                    throw new Error('地图加载超时');
+                }, 10000);
+                
+                // 初始化地图，增加更多兼容配置
+                map = new AMap.Map('map', {
+                    zoom: 12,
+                    center: [116.413384, 39.908823],
+                    resizeEnable: true,
+                    scrollWheel: true,
+                    logoPosition: 'RB',
+                    mapStyle: 'amap://styles/normal',
+                    animateEnable: false
                 });
+                
+                // 清除超时定时器
+                clearTimeout(mapLoadTimeout);
+                
+                // 添加比例尺和工具栏控件
+                map.addControl(new AMap.Scale());
+                map.addControl(new AMap.ToolBar({
+                    position: 'RB'
+                }));
+                
+                // 行程位置数据
+                const locations = {
+                    '31': [{ name: '桔子水晶酒店', lnglat: [116.413384, 39.908823] }, { name: '首都机场T2', lnglat: [116.600939, 40.072455] }],
+                    '01': [{ name: '桔子水晶酒店', lnglat: [116.413384, 39.908823] }, { name: '天安门广场', lnglat: [116.397470, 39.908689] }, { name: '天坛公园', lnglat: [116.419850, 39.881820] }, { name: '什刹海冰场', lnglat: [116.396507, 39.942976] }],
+                    '02': [{ name: '桔子水晶酒店', lnglat: [116.413384, 39.908823] }, { name: '故宫博物院', lnglat: [116.390631, 39.916404] }, { name: '景山公园', lnglat: [116.393800, 39.924400] }, { name: '三里屯', lnglat: [116.465100, 39.936300] }],
+                    '03': [{ name: '桔子水晶酒店', lnglat: [116.413384, 39.908823] }, { name: '地坛公园', lnglat: [116.441800, 39.936700] }, { name: '五道营胡同', lnglat: [116.445200, 39.938500] }, { name: '首都机场T3', lnglat: [116.607960, 40.076570] }]
+                };
+                
+                // 创建标记
+                for (const day in locations) {
+                    markers[day] = [];
+                    locations[day].forEach(loc => {
+                        const marker = new AMap.Marker({
+                            position: loc.lnglat,
+                            title: loc.name,
+                            map: day === currentDay ? map : null,
+                            label: { 
+                                content: loc.name, 
+                                offset: new AMap.Pixel(0, -20), 
+                                fontSize: '11px',
+                                className: 'custom-marker-label'
+                            },
+                            icon: new AMap.Icon({
+                                size: new AMap.Size(24, 36),
+                                image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
+                                imageSize: new AMap.Size(24, 36)
+                            })
+                        });
+                        markers[day].push(marker);
+                    });
+                }
+                
+                // 初始化显示当前日期的距离信息
+                updateDistanceInfo(currentDay);
+                
+                // 日期切换事件
+                document.querySelectorAll('.day-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // 隐藏当前标记
+                        markers[currentDay].forEach(m => m.setMap(null));
+                        
+                        // 更新当前日期
+                        currentDay = this.dataset.day;
+                        
+                        // 显示新日期的标记
+                        markers[currentDay].forEach(m => m.setMap(map));
+                        map.setCenter(markers[currentDay][0].getPosition());
+                        
+                        // 更新距离信息
+                        updateDistanceInfo(currentDay);
+                    });
+                });
+                
+                mapInitialized = true;
+            } catch (e) {
+                // 加载失败时显示更详细的排查信息
+                document.getElementById('map').innerHTML = `
+                    <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;color:#666;padding:20px;text-align:center;">
+                        <i class="fa fa-map-o" style="font-size:30px;margin-bottom:10px;color:#9E2A2B;"></i>
+                        <div>地图加载失败</div>
+                        <div style="font-size:10px;margin-top:5px;">错误原因：${e.message}</div>
+                        <div style="font-size:10px;margin-top:5px;">当前配置：</div>
+                        <div style="font-size:9px;margin-top:3px;text-align:left;line-height:1.5;">
+                            • API Key：3bd2861bb1307c9b6f82021b723681fb<br>
+                            • 安全密钥：88dcaf9099d9f0a306a959392a8c7e1f
+                        </div>
+                        <div style="font-size:10px;margin-top:5px;">排查建议：</div>
+                        <div style="font-size:9px;margin-top:3px;text-align:left;line-height:1.5;">
+                            1. 确认安全密钥已绑定当前访问域名<br>
+                            2. 检查API Key是否有效且未被限制<br>
+                            3. 确保网络可访问高德地图API<br>
+                            4. 本地调试需绑定localhost/127.0.0.1
+                        </div>
+                    </div>
+                `;
+                console.error('地图加载失败:', e);
+                
+                // 即使地图加载失败，仍显示距离信息
+                updateDistanceInfo(currentDay);
             }
         }
         
-        // 隐藏指定日期的标记点
-        function hideDayMarkers(day) {
-            if (markers[day]) {
-                markers[day].forEach(marker => {
-                    marker.setMap(null);
-                });
+        // 页面加载完成后初始化 - 增加延迟加载
+        window.addEventListener('load', () => {
+            // 预加载距离信息
+            updateDistanceInfo(currentDay);
+            
+            // 延迟初始化地图，避免资源竞争
+            setTimeout(() => {
+                if (document.getElementById('map-page').classList.contains('active')) {
+                    initMap();
+                }
+            }, 500);
+        });
+        
+        // 自定义Marker标签样式
+        const style = document.createElement('style');
+        style.textContent = `
+            .custom-marker-label {
+                background: rgba(255,255,255,0.9);
+                padding: 2px 5px;
+                border-radius: 2px;
+                border: 1px solid #ddd;
+                white-space: nowrap;
             }
-        }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
