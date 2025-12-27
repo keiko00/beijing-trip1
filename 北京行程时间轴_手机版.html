@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>北京1.1-1.3行程时间轴</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "Heiti SC", sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+        
+        /* 头部样式 */
+        .header {
+            background: linear-gradient(135deg, #366092 0%, #4472C4 100%);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* 统计卡片样式 */
+        .stats-container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 15px;
+            gap: 10px;
+            background-color: white;
+            margin: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .stat-card {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            padding: 12px 8px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .stat-card .value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #366092;
+            margin-bottom: 4px;
+        }
+        
+        .stat-card .label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* 日期分组样式 */
+        .date-group {
+            margin: 15px;
+            border-radius: 12px;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        
+        .date-header {
+            background-color: #4472C4;
+            color: white;
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .date-header .day-cost {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: normal;
+        }
+        
+        /* 行程项样式 */
+        .schedule-list {
+            padding: 10px 0;
+        }
+        
+        .schedule-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f1f1f1;
+            display: flex;
+            gap: 12px;
+            position: relative;
+        }
+        
+        .schedule-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* 时间标签 */
+        .time-tag {
+            min-width: 70px;
+            text-align: center;
+            padding: 8px 5px;
+            background-color: #e7f0ff;
+            color: #4472C4;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        /* 行程内容 */
+        .schedule-content {
+            flex: 1;
+        }
+        
+        .schedule-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #333;
+        }
+        
+        .schedule-remind {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+        
+        .schedule-cost {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cost-tag {
+            font-size: 13px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        
+        .cost-desc {
+            font-size: 11px;
+            color: #999;
+        }
+        
+        /* 有费用的行程项高亮 */
+        .schedule-item.has-cost {
+            background-color: #f8fbff;
+        }
+        
+        /* 底部导航 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 99;
+        }
+        
+        .nav-item {
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .nav-item.active {
+            color: #4472C4;
+        }
+        
+        .nav-item i {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+        
+        /* 费用统计页面样式 */
+        .cost-summary-page {
+            padding: 15px;
+            display: none;
+        }
+        
+        .cost-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .cost-card h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #333;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        
+        .cost-list {
+            list-style: none;
+        }
+        
+        .cost-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f1f1;
+            font-size: 14px;
+        }
+        
+        .cost-list li:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        
+        .category-label {
+            color: #666;
+        }
+        
+        .category-value {
+            color: #333;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 320px) {
+            .stat-card {
+                min-width: 100px;
+            }
+            
+            .time-tag {
+                min-width: 60px;
+                font-size: 12px;
+            }
+        }
+    </style>
+    <!-- 引入图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- 头部 -->
+    <div class="header">
+        <h1>北京行程时间轴</h1>
+        <p>12.31-1.3 详细行程安排</p>
+    </div>
+    
+    <!-- 统计卡片 -->
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="value">4天</div>
+            <div class="label">旅行天数</div>
+        </div>
+        <div class="stat-card">
+            <div class="value">23项</div>
+            <div class="label">总行程数</div>
+        </div>
+        <div class="stat-card">
+            <div class="value">¥7,417.80</div>
+            <div class="label">总费用</div>
+        </div>
+        <div class="stat-card">
+            <div class="value">9项</div>
+            <div class="label">有费用项</div>
+        </div>
+    </div>
+    
+    <!-- 行程内容区 -->
+    <div class="schedule-page">
+        <!-- 12.31 行程 -->
+        <div class="date-group">
+            <div class="date-header">
+                <span>12月31日（除夕）</span>
+                <span class="day-cost">当日费用：¥6,547.00</span>
+            </div>
+            <div class="schedule-list">
+                <div class="schedule-item has-cost">
+                    <div class="time-tag">15:40</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">网易→萧山机场T3</div>
+                        <div class="schedule-remind">已预约包车，提前2小时到机场值机，携带身份证</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥41.00</span>
+                            <span class="cost-desc">网易-萧山机场接机</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item has-cost">
+                    <div class="time-tag">17:50-20:30</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">杭州萧山机场T3→北京首都机场T2</div>
+                        <div class="schedule-remind">无特殊提醒</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥4,068.00</span>
+                            <span class="cost-desc">杭州-北京飞机（往返2人）</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item has-cost">
+                    <div class="time-tag">21:00-22:00</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">机场→酒店</div>
+                        <div class="schedule-remind">已预约包车，约1小时</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥59.00</span>
+                            <span class="cost-desc">首都机场-酒店接机</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item has-cost">
+                    <div class="time-tag">22:30</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">酒店休息</div>
+                        <div class="schedule-remind">无特殊提醒</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥2,379.00</span>
+                            <span class="cost-desc">北京崇文门桔子水晶酒店（3晚）</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 1.1 行程 -->
+        <div class="date-group">
+            <div class="date-header">
+                <span>1月1日（元旦）</span>
+                <span class="day-cost">当日费用：¥121.80</span>
+            </div>
+            <div class="schedule-list">
+                <div class="schedule-item">
+                    <div class="time-tag">4:30-6:36</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">天安门广场洗红墙安检01入场，升旗</div>
+                        <div class="schedule-remind">提前1-9天在「天安门广场预约参观」小程序约升旗时段；带身份证+折叠凳+暖宝宝+保温杯热水</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥0.00</span>
+                            <span class="cost-desc">无费用</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="time-tag">08:00-11:30</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">天安门广场→酒店休息</div>
+                        <div class="schedule-remind">车程20min，回酒店补觉、休整</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥0.00</span>
+                            <span class="cost-desc">无费用</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="time-tag">12:00-13:00</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">待安排</div>
+                        <div class="schedule-remind">无特殊提醒</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥0.00</span>
+                            <span class="cost-desc">无费用</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item has-cost">
+                    <div class="time-tag">13:00-16:00</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">天安门城楼 + 人民大会堂 + 天坛公园</div>
+                        <div class="schedule-remind">1.登天安门城楼俯瞰广场（需预约）；2.参观人民大会堂外景/内部（需预约）；3.天坛公园（北门进南门出）</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥65.80</span>
+                            <span class="cost-desc">天安门城楼（2人）</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item has-cost">
+                    <div class="time-tag">16:00-19:00</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">什刹海冰场</div>
+                        <div class="schedule-remind">提前购票（美团/大众点评），携带身份证，冰鞋需押金</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥56.00</span>
+                            <span class="cost-desc">天坛公园（2人）</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="time-tag">19:00-20:30</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">前门大街晚餐，夜景</div>
+                        <div class="schedule-remind">推荐四季民福烤鸭店（需提前预约）</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥0.00</span>
+                            <span class="cost-desc">无费用</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="time-tag">20:30后</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">酒店</div>
+                        <div class="schedule-remind">无特殊提醒</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥0.00</span>
+                            <span class="cost-desc">无费用</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 1.2 行程 -->
+        <div class="date-group">
+            <div class="date-header">
+                <span>1月2日（核心日）</span>
+                <span class="day-cost">当日费用：¥749.00</span>
+            </div>
+            <div class="schedule-list">
+                <div class="schedule-item has-cost">
+                    <div class="time-tag">10:30</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">星光兔西扶海棠-格格妆造</div>
+                        <div class="schedule-remind">11点档期，需提前半小时到店（路程30min）王府世纪6楼601A</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥499.00</span>
+                            <span class="cost-desc">西扶海棠（单人，仅妆造）</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="time-tag">10:00-12:00</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">东华门 / 午门广场 / 故宫角楼（外景）</div>
+                        <div class="schedule-remind">外围拍摄不进故宫</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥0.00</span>
+                            <span class="cost-desc">无费用</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="time-tag">12:00-13:00</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">附近午餐</div>
+                        <div class="schedule-remind">无特殊提醒</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥0.00</span>
+                            <span class="cost-desc">无费用</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item has-cost">
+                    <div class="time-tag">13:00-16:30</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">故宫博物院（午门进，神武门出）</div>
+                        <div class="schedule-remind">提前7天20:00在「故宫博物院」小程序约下午场（11:00后入园），15:30神武门出</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥246.00</span>
+                            <span class="cost-desc">故宫（下午场，含珍宝馆+钟表馆，2人）</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="time-tag">16:30-17:00</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">神武门→西扶海棠归还衣服</div>
+                        <div class="schedule-remind">无特殊提醒</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥0.00</span>
+                            <span class="cost-desc">无费用</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="time-tag">17:00-17:30</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">景山公园</div>
+                        <div class="schedule-remind">无特殊提醒</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥0.00</span>
+                            <span class="cost-desc">无费用</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="time-tag">17:30-19:00</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">三里屯 / 北新桥晚餐</div>
+                        <div class="schedule-remind">无特殊提醒</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥0.00</span>
+                            <span class="cost-desc">无费用</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="time-tag">19:00后</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">酒店</div>
+                        <div class="schedule-remind">无特殊提醒</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥0.00</span>
+                            <span class="cost-desc">无费用</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 1.3 行程 -->
+        <div class="date-group">
+            <div class="date-header">
+                <span>1月3日（返程日）</span>
+                <span class="day-cost">当日费用：¥0.00</span>
+            </div>
+            <div class="schedule-list">
+                <div class="schedule-item">
+                    <div class="time-tag">09:00-12:00</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">地坛公园 / 五道营胡同</div>
+                        <div class="schedule-remind">无特殊提醒</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥0.00</span>
+                            <span class="cost-desc">无费用</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="time-tag">12:00-14:00</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">附近午餐</div>
+                        <div class="schedule-remind">无特殊提醒</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥0.00</span>
+                            <span class="cost-desc">无费用</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="time-tag">15:00-17:45</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">酒店→北京首都机场</div>
+                        <div class="schedule-remind">无特殊提醒</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥0.00</span>
+                            <span class="cost-desc">无费用</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="time-tag">19:45-21:50</div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">北京首都机场T3→杭州萧山机场T3</div>
+                        <div class="schedule-remind">无特殊提醒</div>
+                        <div class="schedule-cost">
+                            <span class="cost-tag">¥0.00</span>
+                            <span class="cost-desc">无费用（已含在往返机票中）</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 费用统计页面 -->
+    <div class="cost-summary-page">
+        <div class="cost-card">
+            <h3>总费用统计</h3>
+            <ul class="cost-list">
+                <li>
+                    <span class="category-label">总行程费用</span>
+                    <span class="category-value">¥7,417.80</span>
+                </li>
+                <li>
+                    <span class="category-label">平均每日费用</span>
+                    <span class="category-value">¥1,854.45</span>
+                </li>
+                <li>
+                    <span class="category-label">有费用行程数</span>
+                    <span class="category-value">9项</span>
+                </li>
+                <li>
+                    <span class="category-label">平均单项费用</span>
+                    <span class="category-value">¥824.20</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="cost-card">
+            <h3>每日费用明细</h3>
+            <ul class="cost-list">
+                <li>
+                    <span class="category-label">12月31日（除夕）</span>
+                    <span class="category-value">¥6,547.00</span>
+                </li>
+                <li>
+                    <span class="category-label">1月1日（元旦）</span>
+                    <span class="category-value">¥121.80</span>
+                </li>
+                <li>
+                    <span class="category-label">1月2日（核心日）</span>
+                    <span class="category-value">¥749.00</span>
+                </li>
+                <li>
+                    <span class="category-label">1月3日（返程日）</span>
+                    <span class="category-value">¥0.00</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="cost-card">
+            <h3>费用分类统计</h3>
+            <ul class="cost-list">
+                <li>
+                    <span class="category-label">交通费用</span>
+                    <span class="category-value">¥4,168.00</span>
+                </li>
+                <li>
+                    <span class="category-label">住宿费用</span>
+                    <span class="category-value">¥2,379.00</span>
+                </li>
+                <li>
+                    <span class="category-label">景点门票</span>
+                    <span class="category-value">¥367.80</span>
+                </li>
+                <li>
+                    <span class="category-label">体验费用</span>
+                    <span class="category-value">¥499.00</span>
+                </li>
+                <li>
+                    <span class="category-label">总计</span>
+                    <span class="category-value">¥7,413.80</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="cost-card">
+            <h3>大额费用明细</h3>
+            <ul class="cost-list">
+                <li>
+                    <span class="category-label">杭州-北京往返机票（2人）</span>
+                    <span class="category-value">¥4,068.00</span>
+                </li>
+                <li>
+                    <span class="category-label">北京崇文门桔子水晶酒店（3晚）</span>
+                    <span class="category-value">¥2,379.00</span>
+                </li>
+                <li>
+                    <span class="category-label">西扶海棠格格妆造（单人）</span>
+                    <span class="category-value">¥499.00</span>
+                </li>
+                <li>
+                    <span class="category-label">故宫博物院门票（2人）</span>
+                    <span class="category-value">¥246.00</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+        <div class="nav-item active" id="nav-schedule">
+            <i class="fas fa-calendar-alt"></i>
+            <div>行程表</div>
+        </div>
+        <div class="nav-item" id="nav-cost">
+            <i class="fas fa-yen-sign"></i>
+            <div>费用统计</div>
+        </div>
+        <div class="nav-item" id="nav-share">
+            <i class="fas fa-share-alt"></i>
+            <div>分享</div>
+        </div>
+        <div class="nav-item" id="nav-print">
+            <i class="fas fa-print"></i>
+            <div>打印</div>
+        </div>
+    </div>
+    
+    <script>
+        // 页面切换功能
+        const schedulePage = document.querySelector('.schedule-page');
+        const costSummaryPage = document.querySelector('.cost-summary-page');
+        const navSchedule = document.getElementById('nav-schedule');
+        const navCost = document.getElementById('nav-cost');
+        
+        navSchedule.addEventListener('click', function() {
+            schedulePage.style.display = 'block';
+            costSummaryPage.style.display = 'none';
+            navSchedule.classList.add('active');
+            navCost.classList.remove('active');
+        });
+        
+        navCost.addEventListener('click', function() {
+            schedulePage.style.display = 'none';
+            costSummaryPage.style.display = 'block';
+            navSchedule.classList.remove('active');
+            navCost.classList.add('active');
+        });
+        
+        // 分享功能
+        document.getElementById('nav-share').addEventListener('click', function() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '北京1.1-1.3行程时间轴',
+                    text: '我的北京旅行行程表，包含详细安排和费用统计',
+                    url: window.location.href
+                }).catch(error => {
+                    alert('分享功能暂不可用，请手动复制链接分享');
+                });
+            } else {
+                alert('您的浏览器不支持分享功能，请手动复制链接分享');
+            }
+        });
+        
+        // 打印功能
+        document.getElementById('nav-print').addEventListener('click', function() {
+            window.print();
+        });
+        
+        // 优化滚动体验
+        document.querySelectorAll('.schedule-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // 点击行程项可以展开更多详情（这里简化处理）
+                const remind = this.querySelector('.schedule-remind');
+                if (remind.style.maxHeight) {
+                    remind.style.maxHeight = null;
+                } else {
+                    remind.style.maxHeight = remind.scrollHeight + 'px';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
