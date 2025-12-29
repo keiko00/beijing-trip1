@@ -394,12 +394,26 @@
             background-color: rgba(255, 255, 255, 0.2);
             border-radius: 6px;
             font-size: 12px;
+            position: relative;
+        }
+        
+        .weather-city {
+            position: absolute;
+            top: -8px;
+            left: 12px;
+            background-color: #2c5aa0;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: bold;
         }
         
         .weather-item {
             display: flex;
             align-items: center;
             gap: 8px;
+            margin-top: 4px; /* 为城市标签留出空间 */
         }
         
         #weather-icon {
@@ -426,6 +440,7 @@
         .update-time {
             font-size: 9px;
             opacity: 0.7;
+            margin-left: 12px;
         }
         
         /* 图片相关样式 */
@@ -533,6 +548,52 @@
             opacity: 0.7;
         }
         
+        /* 导航控制 */
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+            user-select: none;
+            background: rgba(0, 0, 0, 0.3);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        .modal-prev {
+            left: 30px;
+        }
+        
+        .modal-next {
+            right: 30px;
+        }
+        
+        .modal-nav:hover {
+            background: rgba(0, 0, 0, 0.6);
+        }
+        
+        .modal-counter {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 1001;
+        }
+        
         /* 加载状态样式 */
         .modal-loading {
             position: absolute;
@@ -581,7 +642,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>11和14北京GO</h1>
+        <h1>11和14北京GO 💕</h1>
         <p>12.31-1.3 详细行程安排</p>
         <div class="weather-info">
             <div class="weather-item">
@@ -656,7 +717,7 @@
                 <div class="date-header">
                     <span>1月1日（星期四）</span>
                     <span class="day-cost">当日费用：¥121.80</span>
-                    <span class="sun-time">日出：07:36 | 日落：16:59</span>
+                    <span class="sun-time">🌅 日出：07:36 | 🌇 日落：16:59</span>
                 </div>
                 <div class="schedule-list">
                     <div class="schedule-item">
@@ -668,11 +729,11 @@
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/1.jpg" 
                                      alt="天安门广场升旗" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/2.jpg" 
                                      alt="天安门广场升旗" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                             </div>
                         </div>
                     </div>
@@ -707,49 +768,47 @@
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/13.jpg" 
                                      alt="天安门城楼" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/3.jpg" 
                                      alt="天安门城楼" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/4.jpg" 
                                      alt="天安门城楼" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/5.jpg" 
                                      alt="天坛公园" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/10.jpg" 
                                      alt="天坛公园" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/11.jpg" 
                                      alt="天坛公园" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/12.jpg" 
                                      alt="天坛公园" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/9.jpg" 
                                      alt="天坛公园" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/14.jpg" 
                                      alt="天坛公园" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                             </div>
                         </div>
                     </div>
                     <div class="schedule-item">
                         <div class="time-tag">16:00-19:00</div>
                         <div class="schedule-content">
-                            <div class="schedule-title">什刹海冰场</div>
+                            <div class="schedule-title">什刹海冰场<span class="highlight-red">（关注是否开放）</span></div>
                             <div class="schedule-remind">现场购票，带身份证<br>傍晚灯光亮起时拍照氛围感拉满</div>
-                            <div class="images-grid" data-schedule-id="02-4">
-                            </div>
                         </div>
                     </div>
                         <div class="schedule-item">
@@ -765,7 +824,7 @@
                 <div class="date-header">
                     <span>1月2日（星期五）</span>
                     <span class="day-cost">当日费用：¥753.00</span>
-                    <span class="sun-time">日落：17:00</span>
+                    <span class="sun-time">🌇 日落：17:00</span>
                 </div>
                 <div class="schedule-list">
                     <div class="schedule-item">
@@ -799,32 +858,44 @@
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/21.jpg" 
                                      alt="故宫博物院" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/22.jpg" 
                                      alt="故宫博物院" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/23.jpg" 
                                      alt="故宫博物院" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/24.jpg" 
                                      alt="故宫博物院" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                             </div>
                         </div>
                     </div>
                     <div class="schedule-item">
                         <div class="time-tag">16:30-18:00</div>
                         <div class="schedule-content">
-                            <div class="schedule-title">神武门→景山公园</div>
-                            <div class="schedule-remind">从故宫神武门出，步行5分钟到景山公园<br>登万春亭，俯瞰故宫全景，17:00 前入园</div>
+                            <div class="schedule-title">景山公园</div>
+                            <div class="schedule-remind">从故宫神武门出，步行5分钟到景山公园<br>登万春亭，俯瞰故宫全景，17:00 前入园<br>寿皇殿17:30停止进入</div>
                             <div class="schedule-cost">
                                 <span class="cost-tag">¥4.00</span>
                                 <span class="cost-desc">门票（2人）</span>
                             </div>
                             <div class="images-grid" data-schedule-id="02-7">
+                                <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/51.jpg" 
+                                     alt="景山公园" 
+                                     class="travel-image" 
+                                     onclick="handleImageClick(this)">
+                                <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/36.jpg" 
+                                     alt="景山公园" 
+                                     class="travel-image" 
+                                     onclick="handleImageClick(this)">
+                                <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/52.jpg" 
+                                     alt="景山公园" 
+                                     class="travel-image" 
+                                     onclick="handleImageClick(this)">
                             </div>
                         </div>
                     </div>
@@ -852,11 +923,11 @@
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/31.jpg" 
                                      alt="潘家园" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/17.jpg" 
                                      alt="潘家园" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                             </div>
                         </div>
                     </div>
@@ -884,11 +955,11 @@
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/30.jpg" 
                                      alt="地坛公园" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                                 <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/26.jpg" 
                                      alt="地坛公园" 
                                      class="travel-image" 
-                                     onclick="showImageModal(this.src)">
+                                     onclick="handleImageClick(this)">
                             </div>
                         </div>
                     </div>
@@ -1304,29 +1375,298 @@
         
         // 天气信息功能
         function getBeijingWeather() {
-            // 使用免费的天气API获取北京天气
-            fetch('https://api.openweathermap.org/data/2.5/weather?q=Beijing,CN&appid=YOUR_API_KEY&units=metric&lang=zh_cn')
+            // 使用wttr.in服务获取北京市天气（包括日出日落）
+            // 作为主要数据源，更加稳定可靠
+            const beijingWeatherUrl = 'https://wttr.in/Beijing?format=j1&lang=zh';
+            
+            console.log('正在获取北京市天气数据...', beijingWeatherUrl);
+            
+            fetch(beijingWeatherUrl)
                 .then(response => {
+                    console.log('API响应状态:', response.status, response.statusText);
                     if (!response.ok) {
-                        // 如果API失败，使用模拟数据
-                        throw new Error('Weather API unavailable');
+                        throw new Error(`Weather API unavailable: ${response.status}`);
                     }
                     return response.json();
                 })
                 .then(data => {
-                    updateWeatherDisplay(data);
+                    console.log('获取到天气数据:', data);
+                    // 解析wttr.in返回的数据格式
+                    if (data.current_condition && data.current_condition[0] && data.weather && data.weather[0] && data.weather[0].astronomy && data.weather[0].astronomy[0]) {
+                        const current = data.current_condition[0];
+                        const astronomy = data.weather[0].astronomy[0];  // astronomy在weather[0]中
+                        console.log('当前温度:', current.temp_C);
+                        console.log('日出时间:', astronomy.sunrise);
+                        console.log('日落时间:', astronomy.sunset);
+                        
+                        const weatherData = {
+                            main: { temp: parseInt(current.temp_C) - 2 }, // 温度调整：减去2度
+                            weather: [{ 
+                                main: mapWeatherCondition(current.weatherCode), 
+                                description: mapWeatherDescription(current.weatherCode) 
+                            }],
+                            name: '北京',
+                            sunrise: astronomy.sunrise,
+                            sunset: astronomy.sunset
+                        };
+                        updateWeatherDisplay(weatherData);
+                        updateSunTimes(weatherData);
+                    } else {
+                        console.error('天气数据格式无效:', data);
+                        console.log('响应数据结构:', Object.keys(data));
+                        console.log('current_condition:', data.current_condition);
+                        console.log('weather数组长度:', data.weather ? data.weather.length : 0);
+                        console.log('weather[0]完整结构:', data.weather ? data.weather[0] : 'undefined');
+                        console.log('weather[0].astronomy:', data.weather && data.weather[0] ? data.weather[0].astronomy : 'undefined');
+                        console.log('尝试检查data.astronomy:', data.astronomy);
+                        
+                        // 如果数据格式不对，显示无法获取温度的状态
+                        document.getElementById('weather-temp').textContent = '--';
+                        document.getElementById('weather-desc').textContent = '天气数据解析失败';
+                        document.getElementById('weather-icon').textContent = '❓';
+                        document.getElementById('weather-update').textContent = '--:--';
+                        
+                        // 尝试从其他位置获取天文数据
+                        if (data.astronomy && data.astronomy[0]) {
+                            console.log('找到根级别astronomy数据');
+                            const astronomy = data.astronomy[0];
+                            const weatherData = {
+                                main: { temp: parseInt(data.current_condition[0].temp_C) - 2 }, // 温度调整：减去2度
+                                weather: [{ 
+                                    main: mapWeatherCondition(data.current_condition[0].weatherCode), 
+                                    description: mapWeatherDescription(data.current_condition[0].weatherCode) 
+                                }],
+                                name: '北京',
+                                sunrise: astronomy.sunrise,
+                                sunset: astronomy.sunset
+                            };
+                            updateWeatherDisplay(weatherData);
+                            updateSunTimes(weatherData);
+                        } else if (data.weather && data.weather[0] && data.weather[0].astronomy) {
+                            console.log('找到weather中的astronomy数据');
+                            const astronomy = data.weather[0].astronomy[0];
+                            const weatherData = {
+                                main: { temp: parseInt(data.current_condition[0].temp_C) - 2 }, // 温度调整：减去2度
+                                weather: [{ 
+                                    main: mapWeatherCondition(data.current_condition[0].weatherCode), 
+                                    description: mapWeatherDescription(data.current_condition[0].weatherCode) 
+                                }],
+                                name: '北京',
+                                sunrise: astronomy.sunrise,
+                                sunset: astronomy.sunset
+                            };
+                            updateWeatherDisplay(weatherData);
+                            updateSunTimes(weatherData);
+                        } else {
+                            console.log('无法找到任何天文数据，显示--');
+                            // 更新日出日落显示为--
+                            const janFirstSunTime = document.querySelector('.date-group .sun-time');
+                            if (janFirstSunTime) {
+                                janFirstSunTime.innerHTML = '🌅 日出：-- | 🌇 日落：--';
+                            }
+                            
+                            const allSunTimes = document.querySelectorAll('.sun-time');
+                            allSunTimes.forEach((element, index) => {
+                                if (index === 0) {
+                                    element.innerHTML = '🌅 日出：-- | 🌇 日落：--';
+                                } else {
+                                    element.innerHTML = '🌇 日落：--';
+                                }
+                            });
+                        }
+                    }
                 })
                 .catch(error => {
-                    console.log('使用模拟天气数据');
-                    // 使用模拟天气数据
-                    const mockWeather = {
-                        main: { temp: 8 },
-                        weather: [{ main: 'Clear', description: '晴朗' }],
-                        name: '北京'
-                    };
-                    updateWeatherDisplay(mockWeather);
+                    console.log('wttr.in API调用失败，尝试备用API');
+                    // 备用：使用苹果天气数据API
+                    const backupUrl = 'https://weather-bridge-prod.global.ssl.fastly.net/api/v1/forecast?lat=39.9042&lon=116.4074&region=CN&city=北京市&tz=Asia/Shanghai&units=metric&lang=zh-CN';
+                    console.log('尝试备用API:', backupUrl);
+                    fetch(backupUrl)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Backup API unavailable');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            // 解析苹果天气数据格式
+                            if (data && data.currentWeather && data.dailyForecast && data.dailyForecast[0]) {
+                                const current = data.currentWeather;
+                                const today = data.dailyForecast[0];
+                                const weatherData = {
+                                    main: { temp: Math.round(current.temperature) }, // 苹果天气数据不调整
+                                    weather: [{ 
+                                        main: mapAppleWeatherCondition(current.conditionCode), 
+                                        description: mapAppleWeatherDescription(current.conditionCode) 
+                                    }],
+                                    name: '北京市',
+                                    sunrise: today.sunrise,
+                                    sunset: today.sunset
+                                };
+                                updateWeatherDisplay(weatherData);
+                                updateSunTimes(weatherData);
+                            } else {
+                                throw new Error('Invalid weather data format');
+                            }
+                        })
+                        .catch(error2 => {
+                            console.log('所有天气API调用失败，无法获取实时天气数据');
+                            // 显示无法获取温度的状态
+                            document.getElementById('weather-temp').textContent = '--';
+                            document.getElementById('weather-desc').textContent = '当前无法显示温度';
+                            document.getElementById('weather-icon').textContent = '❓';
+                            document.getElementById('weather-update').textContent = '--:--';
+                        });
                 });
         }
+        
+        // 映射苹果天气代码到标准格式
+        function mapAppleWeatherCondition(conditionCode) {
+            const conditionMap = {
+                'clear-day': 'Clear',
+                'clear-night': 'Clear',
+                'partly-cloudy-day': 'Clouds',
+                'partly-cloudy-night': 'Clouds',
+                'cloudy': 'Clouds',
+                'fog': 'Mist',
+                'wind': 'Mist',
+                'rain': 'Rain',
+                'sleet': 'Rain',
+                'snow': 'Snow',
+                'thunderstorm': 'Thunderstorm'
+            };
+            return conditionMap[conditionCode] || 'Clear';
+        }
+
+        // 映射苹果天气代码到中文描述
+        function mapAppleWeatherDescription(conditionCode) {
+            const descMap = {
+                'clear-day': '晴朗',
+                'clear-night': '晴朗',
+                'partly-cloudy-day': '多云',
+                'partly-cloudy-night': '多云',
+                'cloudy': '阴天',
+                'fog': '雾',
+                'wind': '大风',
+                'rain': '雨天',
+                'sleet': '雨夹雪',
+                'snow': '雪天',
+                'thunderstorm': '雷暴'
+            };
+            return descMap[conditionCode] || '晴朗';
+        }
+        
+        // 映射wttr.in的天气代码到标准格式
+        function mapWeatherCondition(code) {
+            const codeMap = {
+                '113': 'Clear',  // 晴朗
+                '116': 'Clouds', // 多云
+                '119': 'Clouds', // 阴天
+                '122': 'Clouds', // 大阴天
+                '143': 'Clouds', // 雾
+                '176': 'Rain',   // 阵雨
+                '179': 'Rain',   // 雪阵雨
+                '182': 'Rain',   // 雨夹雪
+                '185': 'Drizzle', // 冻毛毛雨
+                '200': 'Rain',   // 雷阵雨
+                '227': 'Snow',   // 雪
+                '230': 'Snow',   // 大雪
+                '248': 'Clouds', // 雾
+                '260': 'Clouds', // 冻雾
+                '263': 'Drizzle', // 毛毛雨
+                '266': 'Drizzle', // 中毛毛雨
+                '281': 'Drizzle', // 冻毛毛雨
+                '284': 'Drizzle', // 中冻毛毛雨
+                '293': 'Rain',   // 小雨
+                '296': 'Rain',   // 中雨
+                '299': 'Rain',   // 大雨
+                '302': 'Rain',   // 特大雨
+                '305': 'Rain',   // 暴雨
+                '308': 'Rain',   // 大暴雨
+                '311': 'Rain',   // 特大暴雨
+                '314': 'Rain',   // 冻雨
+                '317': 'Rain',   // 冻雨
+                '320': 'Snow',   // 暴雨雪
+                '323': 'Snow',   // 雪
+                '326': 'Snow',   // 大雪
+                '329': 'Snow',   // 特大雪
+                '332': 'Snow',   // 雪暴
+                '335': 'Snow',   // 雪暴
+                '338': 'Snow',   // 特大雪暴
+                '350': 'Drizzle', // 雷阵雨
+                '353': 'Rain',   // 阵雨
+                '356': 'Rain',   // 阵雨
+                '359': 'Rain',   // 阵雨
+                '362': 'Rain',   // 小阵雨
+                '365': 'Rain',   // 中阵雨
+                '368': 'Rain',   // 大阵雨
+                '371': 'Snow',   // 雪阵雨
+                '374': 'Snow',   // 小雪阵雨
+                '377': 'Snow',   // 雪阵雨
+                '386': 'Rain',   // 雷阵雨
+                '389': 'Rain',   // 雷阵雨
+                '392': 'Snow',   // 雷雪
+                '395': 'Snow'    // 雷雪
+            };
+            return codeMap[code] || 'Clear';
+        }
+        
+        // 映射天气代码到中文描述
+        function mapWeatherDescription(code) {
+            const descMap = {
+                '113': '晴朗',
+                '116': '多云',
+                '119': '阴天',
+                '122': '大阴天',
+                '143': '雾',
+                '176': '阵雨',
+                '179': '雪阵雨',
+                '182': '雨夹雪',
+                '185': '冻毛毛雨',
+                '200': '雷阵雨',
+                '227': '雪',
+                '230': '大雪',
+                '248': '雾',
+                '260': '冻雾',
+                '263': '毛毛雨',
+                '266': '中毛毛雨',
+                '281': '冻毛毛雨',
+                '284': '中冻毛毛雨',
+                '293': '小雨',
+                '296': '中雨',
+                '299': '大雨',
+                '302': '特大雨',
+                '305': '暴雨',
+                '308': '大暴雨',
+                '311': '特大暴雨',
+                '314': '冻雨',
+                '317': '冻雨',
+                '320': '暴雨雪',
+                '323': '雪',
+                '326': '大雪',
+                '329': '特大雪',
+                '332': '雪暴',
+                '335': '雪暴',
+                '338': '特大雪暴',
+                '350': '雷阵雨',
+                '353': '阵雨',
+                '356': '阵雨',
+                '359': '阵雨',
+                '362': '小阵雨',
+                '365': '中阵雨',
+                '368': '大阵雨',
+                '371': '雪阵雨',
+                '374': '小雪阵雨',
+                '377': '雪阵雨',
+                '386': '雷阵雨',
+                '389': '雷阵雨',
+                '392': '雷雪',
+                '395': '雷雪'
+            };
+            return descMap[code] || '晴朗';
+        }
+        
+
         
         function updateWeatherDisplay(weatherData) {
             const temp = Math.round(weatherData.main.temp);
@@ -1341,6 +1681,79 @@
             document.getElementById('weather-desc').textContent = description;
             document.getElementById('weather-icon').textContent = icon;
             document.getElementById('weather-update').textContent = `${updateTime} 更新`;
+        }
+
+        // 更新日出日落时间显示
+        function updateSunTimes(weatherData) {
+            if (weatherData.sunrise && weatherData.sunset) {
+                // 格式化时间（苹果API可能返回不同格式）
+                const sunriseTime = formatSunTime(weatherData.sunrise);
+                const sunsetTime = formatSunTime(weatherData.sunset);
+                
+                // 更新1月1日的日出日落
+                const janFirstSunTime = document.querySelector('.date-group .sun-time');
+                if (janFirstSunTime) {
+                    janFirstSunTime.innerHTML = `🌅 日出：${sunriseTime} | 🌇 日落：${sunsetTime}`;
+                }
+                
+                // 更新1月2日的日落（如果有的话）
+                const allSunTimes = document.querySelectorAll('.sun-time');
+                if (allSunTimes.length > 1) {
+                    allSunTimes[1].innerHTML = `🌇 日落：${sunsetTime}`;
+                }
+            }
+        }
+
+        // 格式化日出日落时间为24小时制
+        function formatSunTime(timeString) {
+            console.log('原始时间字符串:', timeString);
+            
+            // 如果没有时间数据，返回--
+            if (!timeString || timeString === '') {
+                console.log('没有时间数据，返回--');
+                return '--';
+            }
+            
+            // 尝试解析不同的时间格式
+            if (timeString.includes(':')) {
+                // 如果已经包含冒号，提取小时:分钟
+                const timeMatch = timeString.match(/(\d{1,2}):(\d{2})/);
+                if (timeMatch) {
+                    const hours = parseInt(timeMatch[1]);
+                    const minutes = timeMatch[2];
+                    console.log('冒号格式解析:', hours, minutes);
+                    return `${hours.toString().padStart(2, '0')}:${minutes}`;
+                }
+            }
+            
+            // 如果是4位数字格式（如HHMM）
+            if (/^\d{4}$/.test(timeString)) {
+                const hours = parseInt(timeString.substring(0, 2));
+                const minutes = timeString.substring(2);
+                console.log('4位数字格式解析:', hours, minutes);
+                return `${hours.toString().padStart(2, '0')}:${minutes}`;
+            }
+            
+            // 如果是12小时制格式（如6:35AM）
+            const amPmMatch = timeString.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+            if (amPmMatch) {
+                let hours = parseInt(amPmMatch[1]);
+                const minutes = amPmMatch[2];
+                const ampm = amPmMatch[3].toUpperCase();
+                
+                console.log('12小时制解析:', hours, minutes, ampm);
+                
+                if (ampm === 'PM' && hours !== 12) {
+                    hours += 12;
+                } else if (ampm === 'AM' && hours === 12) {
+                    hours = 0;
+                }
+                
+                return `${hours.toString().padStart(2, '0')}:${minutes}`;
+            }
+            
+            console.log('无法解析时间格式，返回--');
+            return '--';
         }
         
         function getWeatherIcon(weatherMain) {
@@ -1420,8 +1833,24 @@
             return;
         }
         
-        // 优化的图片放大模态框
-        function showImageModal(src) {
+        // 统一的图片点击处理函数
+        function handleImageClick(imgElement) {
+            // 获取当前行程的所有图片
+            const imagesGrid = imgElement.closest('.images-grid');
+            const allImagesInGrid = imagesGrid.querySelectorAll('.travel-image');
+            
+            // 提取所有图片URL
+            const images = Array.from(allImagesInGrid).map(img => img.src);
+            
+            // 找到当前点击图片的索引
+            const currentIndex = Array.from(allImagesInGrid).indexOf(imgElement);
+            
+            // 调用模态框函数，传递图片数组和当前索引
+            showImageModal(imgElement.src, images, currentIndex);
+        }
+        
+        // 优化的图片放大模态框（支持滑动）
+        function showImageModal(src, images = [src], currentIndex = 0) {
             // 检查图片是否已缓存
             if (imageCache.has(src) && imageCache.get(src) === false) {
                 alert('图片暂时无法加载，请稍后再试');
@@ -1438,31 +1867,37 @@
             
             // 创建图片元素
             const img = document.createElement('img');
-            img.alt = '放大图片';
+            img.alt = `图片 ${currentIndex + 1} / ${images.length}`;
             img.style.display = 'none';
             
-            // 图片加载完成事件
-            img.onload = function() {
-                loadingDiv.style.display = 'none';
-                img.style.display = 'block';
-                imageCache.set(src, true);
-            };
+            // 创建导航箭头（多张图片时显示）
+            let navControls = '';
+            if (images.length > 1) {
+                navControls = `
+                    <div class="modal-nav modal-prev" onclick="previousImage()">‹</div>
+                    <div class="modal-nav modal-next" onclick="nextImage()">›</div>
+                    <div class="modal-counter">${currentIndex + 1} / ${images.length}</div>
+                `;
+            }
             
-            // 图片加载失败事件
-            img.onerror = function() {
-                loadingDiv.innerHTML = '<div class="error-icon">⚠️</div><p>图片加载失败</p><button onclick="closeImageModal()">关闭</button>';
-                imageCache.set(src, false);
-            };
-            
-            modal.innerHTML = `<span class="modal-close" onclick="closeImageModal()">&times;</span>`;
+            modal.innerHTML = `
+                <span class="modal-close" onclick="closeImageModal()">&times;</span>
+                ${navControls}
+            `;
             modal.appendChild(loadingDiv);
             modal.appendChild(img);
             
             document.body.appendChild(modal);
             modal.style.display = 'block';
             
+            // 全局变量用于滑动功能
+            window.currentImages = images;
+            window.currentImageIndex = currentIndex;
+            window.modalImg = img;
+            window.modalLoading = loadingDiv;
+            
             // 开始加载图片
-            img.src = src;
+            loadImage(src);
             
             // 点击空白处关闭
             modal.addEventListener('click', (e) => {
@@ -1471,13 +1906,106 @@
                 }
             });
             
-            // ESC键关闭
-            document.addEventListener('keydown', function escHandler(e) {
+            // 键盘事件
+            document.addEventListener('keydown', function imageKeyHandler(e) {
                 if (e.key === 'Escape') {
                     closeImageModal();
-                    document.removeEventListener('keydown', escHandler);
+                    document.removeEventListener('keydown', imageKeyHandler);
+                } else if (images.length > 1 && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+                    e.preventDefault();
+                    if (e.key === 'ArrowLeft') {
+                        previousImage();
+                    } else {
+                        nextImage();
+                    }
                 }
             });
+            
+            // 触摸滑动支持
+            let startX = 0;
+            let endX = 0;
+            
+            modal.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+            });
+            
+            modal.addEventListener('touchend', (e) => {
+                endX = e.changedTouches[0].clientX;
+                handleSwipe();
+            });
+            
+            function handleSwipe() {
+                if (images.length <= 1) return;
+                
+                const threshold = 50; // 滑动阈值
+                const diff = startX - endX;
+                
+                if (Math.abs(diff) > threshold) {
+                    if (diff > 0) {
+                        nextImage(); // 向左滑动，下一张
+                    } else {
+                        previousImage(); // 向右滑动，上一张
+                    }
+                }
+            }
+        }
+        
+        // 加载图片函数
+        function loadImage(src) {
+            window.modalImg.onload = function() {
+                window.modalLoading.style.display = 'none';
+                window.modalImg.style.display = 'block';
+                imageCache.set(src, true);
+            };
+            
+            window.modalImg.onerror = function() {
+                window.modalLoading.innerHTML = '<div class="error-icon">⚠️</div><p>图片加载失败</p><button onclick="closeImageModal()">关闭</button>';
+                imageCache.set(src, false);
+            };
+            
+            window.modalImg.src = src;
+        }
+        
+        // 上一张图片
+        function previousImage() {
+            if (!window.currentImages || window.currentImages.length <= 1) return;
+            
+            window.currentImageIndex = window.currentImageIndex > 0 ? 
+                window.currentImageIndex - 1 : window.currentImages.length - 1;
+            
+            const newSrc = window.currentImages[window.currentImageIndex];
+            window.modalImg.alt = `图片 ${window.currentImageIndex + 1} / ${window.currentImages.length}`;
+            window.modalLoading.style.display = 'block';
+            window.modalLoading.innerHTML = '<div class="loading-spinner"></div><p>加载中...</p>';
+            
+            // 更新计数器显示
+            const counter = document.querySelector('.modal-counter');
+            if (counter) {
+                counter.textContent = `${window.currentImageIndex + 1} / ${window.currentImages.length}`;
+            }
+            
+            loadImage(newSrc);
+        }
+        
+        // 下一张图片
+        function nextImage() {
+            if (!window.currentImages || window.currentImages.length <= 1) return;
+            
+            window.currentImageIndex = window.currentImageIndex < window.currentImages.length - 1 ? 
+                window.currentImageIndex + 1 : 0;
+            
+            const newSrc = window.currentImages[window.currentImageIndex];
+            window.modalImg.alt = `图片 ${window.currentImageIndex + 1} / ${window.currentImages.length}`;
+            window.modalLoading.style.display = 'block';
+            window.modalLoading.innerHTML = '<div class="loading-spinner"></div><p>加载中...</p>';
+            
+            // 更新计数器显示
+            const counter = document.querySelector('.modal-counter');
+            if (counter) {
+                counter.textContent = `${window.currentImageIndex + 1} / ${window.currentImages.length}`;
+            }
+            
+            loadImage(newSrc);
         }
         
         function closeImageModal() {
