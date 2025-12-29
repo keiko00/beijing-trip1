@@ -21,7 +21,10 @@
         }
         
         .header {
-            background: linear-gradient(135deg, #9E2A2B 0%, #BB3A3A 100%);
+            background-image: url('https://raw.githubusercontent.com/keiko00/beijing-trip1/main/50.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             color: white;
             padding: 15px;
             text-align: center;
@@ -29,6 +32,22 @@
             top: 0;
             z-index: 100;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
         }
         
         .header h1 {
@@ -1151,19 +1170,27 @@
         
         // 优化的地图跳转功能 - 支持直接路线规划
         function openGaodeMap(route) {
+            console.log('🚀 地图跳转开始', route);
+            
             // 提取起点和终点
             const locations = route.split(' → ');
-            if (locations.length < 2) return;
+            if (locations.length < 2) {
+                console.error('❌ 路线格式错误，无法提取起点和终点');
+                return;
+            }
             
             const origin = locations[0].trim();
             const destination = locations[1].trim();
+            console.log('📍 起点:', origin, '终点:', destination);
             
             // 判断是否安装了高德地图APP
             const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            console.log('📱 设备类型:', isMobile ? '移动端' : 'PC端');
             
             // 北京地标地址映射（确保准确的地址信息）
             const addressMap = {
-                '酒店': '北京',
+                '酒店': '北京市东城区崇文门外大街',
+                '桔子水晶酒店（崇文门店）': '北京市东城区崇文门外大街42号',
                 '天安门广场': '北京市东城区天安门广场',
                 '天安门城楼': '北京市东城区天安门广场',
                 '人民大会堂': '北京市东城区天安门广场',
@@ -1174,40 +1201,78 @@
                 '潘家园+晚餐': '北京市朝阳区潘家园',
                 '地坛公园': '北京市东城区地坛公园',
                 '五道营胡同': '北京市东城区五道营胡同',
-                '首都机场T3': '北京首都国际机场T3航站楼',
-                '萧山机场T3': '杭州萧山国际机场T3航站楼',
-                '网易': '杭州网易一期东门',
+                '首都机场T2': '北京市顺义区北京首都国际机场T2航站楼',
+                '首都机场T3': '北京市顺义区北京首都国际机场T3航站楼',
+                '萧山机场T3': '浙江省杭州市萧山区杭州萧山国际机场T3航站楼',
+                '网易': '浙江省杭州市滨江区网商路599号',
                 '三里屯': '北京市朝阳区三里屯',
                 '西扶海棠': '北京市东城区西扶海棠'
             };
             
             // 获取准确的地址信息
-            const originAddress = addressMap[origin] || origin + ',北京';
-            const destinationAddress = addressMap[destination] || destination + ',北京';
+            const originAddress = addressMap[origin] || `${origin},北京市`;
+            const destinationAddress = addressMap[destination] || `${destination},北京市`;
+            
+            console.log('🏠 起点地址:', originAddress);
+            console.log('🏠 终点地址:', destinationAddress);
+            
+            // 验证地址是否有效
+            if (!originAddress || !destinationAddress) {
+                console.error('❌ 地址映射失败');
+                return;
+            }
             
             if (isMobile) {
-                // 移动端：尝试打开高德地图APP
-                const gaodeAppUrl = `iosamap://navi?sourceApplication=beijing-trip&from=${encodeURIComponent(originAddress)}&to=${encodeURIComponent(destinationAddress)}&dev=0&style=2`;
+                console.log('🔄 移动端处理中...');
                 
-                // 尝试打开高德地图APP
-                const link = document.createElement('a');
-                link.href = gaodeAppUrl;
-                link.style.display = 'none';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                // 移动端：尝试打开高德地图APP
+                const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+                console.log('🍎 iOS设备:', isIOS);
+                
+                if (isIOS) {
+                    // iOS高德地图URL - 使用poiname参数确保准确搜索
+                    const gaodeAppUrl = `iosamap://navi?poiname=${encodeURIComponent(destinationAddress)}&lat=${encodeURIComponent('')}&lon=${encodeURIComponent('')}&dev=0&style=2`;
+                    
+                    console.log('📱 iOS URL:', gaodeAppUrl);
+                    
+                    const link = document.createElement('a');
+                    link.href = gaodeAppUrl;
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } else {
+                    // Android高德地图URL - 使用poiname参数确保准确搜索
+                    const gaodeAppUrl = `androidamap://navi?poiname=${encodeURIComponent(destinationAddress)}&lat=${encodeURIComponent('')}&lon=${encodeURIComponent('')}&dev=0&style=2`;
+                    
+                    console.log('🤖 Android URL:', gaodeAppUrl);
+                    
+                    const link = document.createElement('a');
+                    link.href = gaodeAppUrl;
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
                 
                 // 2秒后打开网页版作为备选
                 setTimeout(() => {
-                    const webUrl = `https://uri.amap.com/navigation?from=${encodeURIComponent(originAddress)}&to=${encodeURIComponent(destinationAddress)}&mode=car&policy=1&src=beijing-trip&coordinate=gaode`;
+                    console.log('🌐 打开网页版高德地图...');
+                    const webUrl = `https://ditu.amap.com/search?query=${encodeURIComponent(originAddress)}%20%E5%88%B0%20${encodeURIComponent(destinationAddress)}`;
+                    console.log('🌐 网页版URL:', webUrl);
                     window.open(webUrl, '_blank');
                 }, 2000);
                 
             } else {
+                console.log('💻 PC端处理中...');
+                
                 // PC端：打开高德地图网页版进行路线规划
-                const routeUrl = `https://uri.amap.com/navigation?from=${encodeURIComponent(originAddress)}&to=${encodeURIComponent(destinationAddress)}&mode=car&policy=1&src=beijing-trip&coordinate=gaode`;
+                const routeUrl = `https://ditu.amap.com/search?query=${encodeURIComponent(originAddress)}%20%E5%88%B0%20${encodeURIComponent(destinationAddress)}`;
+                console.log('💻 PC端URL:', routeUrl);
                 window.open(routeUrl, '_blank');
             }
+            
+            console.log('✅ 地图跳转完成');
         }
         
         // 天气信息功能
