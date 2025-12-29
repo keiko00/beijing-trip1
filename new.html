@@ -513,6 +513,50 @@
         .modal-close:hover {
             opacity: 0.7;
         }
+        
+        /* 加载状态样式 */
+        .modal-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-loading button {
+            background: #BB3A3A;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .modal-loading button:hover {
+            background: #9A2E2E;
+        }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
 </head>
@@ -547,11 +591,11 @@
                     <div class="schedule-item">
                         <div class="time-tag">15:40</div>
                         <div class="schedule-content">
-                            <div class="schedule-title">网易→萧山机场T3</div>
+                            <div class="schedule-title">杭州网易一期东门→萧山机场T3</div>
                             <div class="schedule-remind">已预约包车，提前2小时到机场值机</div>
                             <div class="schedule-cost">
                                 <span class="cost-tag">¥41.00</span>
-                                <span class="cost-desc">网易-萧山机场接机</span>
+                                <span class="cost-desc">杭州网易一期东门-萧山机场接机</span>
                             </div>
                         </div>
                     </div>
@@ -694,7 +738,7 @@
                         <div class="schedule-content">
                             <div class="schedule-title">潘家园+晚餐</div>
                             <div class="images-grid" data-schedule-id="02-7">
-                                <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/16.jpg" 
+                                <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/31.jpg" 
                                      alt="潘家园" 
                                      class="travel-image" 
                                      onclick="showImageModal(this.src)">
@@ -814,7 +858,7 @@
                         <div class="schedule-content">
                             <div class="schedule-title">地坛公园 / 五道营胡同</div>
                             <div class="images-grid" data-schedule-id="03-1">
-                                <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/25.jpg" 
+                                <img src="https://raw.githubusercontent.com/keiko00/beijing-trip1/main/30.jpg" 
                                      alt="地坛公园" 
                                      class="travel-image" 
                                      onclick="showImageModal(this.src)">
@@ -1105,20 +1149,65 @@
             updateDistanceInfo(currentDay);
         });
         
-        // 高德地图跳转功能
+        // 优化的地图跳转功能 - 支持直接路线规划
         function openGaodeMap(route) {
             // 提取起点和终点
             const locations = route.split(' → ');
             if (locations.length < 2) return;
             
-            const origin = locations[0];
-            const destination = locations[1];
+            const origin = locations[0].trim();
+            const destination = locations[1].trim();
             
-            // 构建高德地图URL
-            const gaodeUrl = `https://uri.amap.com/navigation?from=${encodeURIComponent(origin)}&to=${encodeURIComponent(destination)}&mode=car&policy=1&src=beijing-trip&coordinate=gaode&callnative=1`;
+            // 判断是否安装了高德地图APP
+            const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             
-            // 尝试打开高德地图
-            window.location.href = gaodeUrl;
+            // 北京地标地址映射（确保准确的地址信息）
+            const addressMap = {
+                '酒店': '北京',
+                '天安门广场': '北京市东城区天安门广场',
+                '天安门城楼': '北京市东城区天安门广场',
+                '人民大会堂': '北京市东城区天安门广场',
+                '天坛公园': '北京市东城区天坛路甲1号',
+                '故宫博物院': '北京市东城区景山前街4号',
+                '景山公园': '北京市东城区景山前街',
+                '什刹海冰场': '北京市西城区什刹海',
+                '潘家园+晚餐': '北京市朝阳区潘家园',
+                '地坛公园': '北京市东城区地坛公园',
+                '五道营胡同': '北京市东城区五道营胡同',
+                '首都机场T3': '北京首都国际机场T3航站楼',
+                '萧山机场T3': '杭州萧山国际机场T3航站楼',
+                '网易': '杭州网易一期东门',
+                '三里屯': '北京市朝阳区三里屯',
+                '西扶海棠': '北京市东城区西扶海棠'
+            };
+            
+            // 获取准确的地址信息
+            const originAddress = addressMap[origin] || origin + ',北京';
+            const destinationAddress = addressMap[destination] || destination + ',北京';
+            
+            if (isMobile) {
+                // 移动端：尝试打开高德地图APP
+                const gaodeAppUrl = `iosamap://navi?sourceApplication=beijing-trip&from=${encodeURIComponent(originAddress)}&to=${encodeURIComponent(destinationAddress)}&dev=0&style=2`;
+                
+                // 尝试打开高德地图APP
+                const link = document.createElement('a');
+                link.href = gaodeAppUrl;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // 2秒后打开网页版作为备选
+                setTimeout(() => {
+                    const webUrl = `https://uri.amap.com/navigation?from=${encodeURIComponent(originAddress)}&to=${encodeURIComponent(destinationAddress)}&mode=car&policy=1&src=beijing-trip&coordinate=gaode`;
+                    window.open(webUrl, '_blank');
+                }, 2000);
+                
+            } else {
+                // PC端：打开高德地图网页版进行路线规划
+                const routeUrl = `https://uri.amap.com/navigation?from=${encodeURIComponent(originAddress)}&to=${encodeURIComponent(destinationAddress)}&mode=car&policy=1&src=beijing-trip&coordinate=gaode`;
+                window.open(routeUrl, '_blank');
+            }
         }
         
         // 天气信息功能
@@ -1177,23 +1266,111 @@
             return iconMap[weatherMain] || '🌤️';
         }
         
+        // 图片缓存管理
+        const imageCache = new Map();
+        const imageLoadStatus = new Map();
+        
+        // 预加载所有图片 - 强制刷新缓存版本
+        function preloadImages() {
+            console.log('开始预加载图片...');
+            
+            // 创建一个缓存 Map 来跟踪已加载的图片
+            const imageCache = new Map();
+            let preloadedCount = 0;
+            
+            // 获取所有图片
+            const allImages = document.querySelectorAll('.travel-image');
+            const totalImages = allImages.length;
+            
+            // 统一预加载所有图片
+            allImages.forEach(img => {
+                const src = img.src;
+                
+                // 检查图片是否已经在视口中可见
+                const rect = img.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+                
+                // 如果图片不在缓存中，则进行预加载
+                if (!imageCache.has(src)) {
+                    const preloadImg = new Image();
+                    preloadImg.onload = function() {
+                        imageCache.set(src, true);
+                        preloadedCount++;
+                        console.log(`✅ 图片预加载成功: ${src} (${preloadedCount}/${totalImages})`);
+                    };
+                    
+                    preloadImg.onerror = function() {
+                        imageCache.set(src, false);
+                        console.warn(`⚠️ 图片预加载失败: ${src}`);
+                    };
+                    
+                    preloadImg.src = src;
+                }
+            });
+            
+            console.log(`图片预加载完成，共处理了 ${totalImages} 张图片`);
+        }
+        
+        // 更新图片加载状态显示
+        function updateImageLoadStatus(img, loaded) {
+            if (loaded) {
+                img.style.opacity = '1';
+                img.style.filter = 'none';
+            } else {
+                img.style.opacity = '0.5';
+                img.style.filter = 'grayscale(100%)';
+            }
+        }
+        
         // 图片管理功能
         function addImage(element) {
             // 添加图片功能已禁用
             return;
         }
         
-        // 图片放大模态框
+        // 优化的图片放大模态框
         function showImageModal(src) {
+            // 检查图片是否已缓存
+            if (imageCache.has(src) && imageCache.get(src) === false) {
+                alert('图片暂时无法加载，请稍后再试');
+                return;
+            }
+            
             const modal = document.createElement('div');
             modal.className = 'image-modal';
-            modal.innerHTML = `
-                <span class="modal-close" onclick="closeImageModal()">&times;</span>
-                <img src="${src}" alt="放大图片" onerror="this.src='https://via.placeholder.com/400x300?text=图片加载失败'">
-            `;
+            
+            // 创建加载状态
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'modal-loading';
+            loadingDiv.innerHTML = '<div class="loading-spinner"></div><p>图片加载中...</p>';
+            
+            // 创建图片元素
+            const img = document.createElement('img');
+            img.alt = '放大图片';
+            img.style.display = 'none';
+            
+            // 图片加载完成事件
+            img.onload = function() {
+                loadingDiv.style.display = 'none';
+                img.style.display = 'block';
+                imageCache.set(src, true);
+            };
+            
+            // 图片加载失败事件
+            img.onerror = function() {
+                loadingDiv.innerHTML = '<div class="error-icon">⚠️</div><p>图片加载失败</p><button onclick="closeImageModal()">关闭</button>';
+                imageCache.set(src, false);
+            };
+            
+            modal.innerHTML = `<span class="modal-close" onclick="closeImageModal()">&times;</span>`;
+            modal.appendChild(loadingDiv);
+            modal.appendChild(img);
             
             document.body.appendChild(modal);
             modal.style.display = 'block';
+            
+            // 开始加载图片
+            img.src = src;
             
             // 点击空白处关闭
             modal.addEventListener('click', (e) => {
@@ -1228,6 +1405,11 @@
             
             // 初始化距离信息
             updateDistanceInfo(currentDay);
+            
+            // 预加载所有图片，延迟2秒开始
+            setTimeout(() => {
+                preloadImages();
+            }, 2000);
         });
     </script>
 </body>
